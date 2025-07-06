@@ -4055,7 +4055,6 @@
       };
     </script>
     <script>
-     
       (async () => {
         const key = localStorage.getItem("validKey");
         if (key) {
@@ -4065,7 +4064,6 @@
             body: JSON.stringify({ key }),
           });
         } else {
-         
           alert("Bạn chưa có key hợp lệ. Quay lại trang chính.");
           window.location.href = "/";
         }
