@@ -3920,7 +3920,6 @@
         const timestamp = Date.now();
         const userAgent = navigator.userAgent;
         let ip = "unknown";
-
         try {
           const res = await fetch("https://api.ipify.org?format=json");
           const data = await res.json();
@@ -3949,7 +3948,6 @@
         function update() {
           const now = Date.now();
           const remaining = expireTime - now;
-
           if (remaining <= 0) {
             countdownEl.textContent = "⏰ Hết hạn!";
             localStorage.removeItem("validKey");
@@ -3957,11 +3955,9 @@
             location.reload();
             return;
           }
-
           const h = Math.floor(remaining / (1000 * 60 * 60));
           const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
           const s = Math.floor((remaining % (1000 * 60)) / 1000);
-
           countdownEl.textContent = `⏳ Còn lại: ${h}h ${m}m ${s}s`;
         }
 
@@ -4011,6 +4007,14 @@
           }
 
           await logKeyUsage(key, fingerprint);
+
+          // ✅ Xác thực với backend
+          await fetch("/api/session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ key }),
+          });
+
           document.getElementById("overlayKey").style.display = "none";
           document.body.style.overflow = "auto";
           localStorage.setItem("validKey", key);
@@ -4040,6 +4044,13 @@
                 data.fingerprint === fingerprint &&
                 data.banned !== true
               ) {
+                // ✅ Xác thực với backend nếu key còn dùng được
+                await fetch("/api/session", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ key: savedKey }),
+                });
+
                 document.getElementById("overlayKey").style.display = "none";
                 document.body.style.overflow = "auto";
                 startCountdown(createdAt + duration);
@@ -4053,21 +4064,6 @@
           }
         }
       };
-    </script>
-    <script>
-      (async () => {
-        const key = localStorage.getItem("validKey");
-        if (key) {
-          await fetch("/api/session", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ key }),
-          });
-        } else {
-          alert("Bạn chưa có key hợp lệ. Quay lại trang chính.");
-          window.location.href = "/";
-        }
-      })();
     </script>
   </body>
 </html>
