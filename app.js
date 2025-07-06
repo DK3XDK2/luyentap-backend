@@ -26,11 +26,6 @@ const checkKey = (req, res, next) => {
   return res.redirect("/key");
 };
 
-// Trang nhập key
-app.get("/key", (req, res) => {
-  res.render("key"); // bạn tạo file key.ejs để nhập key
-});
-
 app.post("/key", (req, res) => {
   const { key } = req.body;
   if (key === "TS2024") {
