@@ -3973,5 +3973,35 @@
         }
       };
     </script>
+    <script>
+      (async () => {
+        const key = localStorage.getItem("validKey");
+        if (key) {
+          await fetch("/api/session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ key }),
+          });
+        } else {
+          alert("Bạn chưa có key hợp lệ. Quay lại trang chính.");
+          window.location.href = "/";
+        }
+      })();
+    </script>
+    <script>
+      (async () => {
+        const key = localStorage.getItem("validKey");
+        if (key) {
+          await fetch("/api/session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ key }),
+          });
+        } else {
+          alert("Bạn chưa có key hợp lệ. Quay lại trang chính.");
+          window.location.href = "/";
+        }
+      })();
+    </script>
   </body>
 </html>
