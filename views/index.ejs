@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Chọn bài luyện tập</title>
+    <style>
+      @keyframes shake {
+        0% {
+          transform: translate(1px, 1px) rotate(0deg);
+        }
+        10% {
+          transform: translate(-1px, -2px) rotate(-1deg);
+        }
+        20% {
+          transform: translate(-3px, 0px) rotate(1deg);
+        }
+        30% {
+          transform: translate(3px, 2px) rotate(0deg);
+        }
+        40% {
+          transform: translate(1px, -1px) rotate(1deg);
+        }
+        50% {
+          transform: translate(-1px, 2px) rotate(-1deg);
+        }
+        60% {
+          transform: translate(-3px, 1px) rotate(0deg);
+        }
+        70% {
+          transform: translate(3px, 1px) rotate(-1deg);
+        }
+        80% {
+          transform: translate(-1px, -1px) rotate(1deg);
+        }
+        90% {
+          transform: translate(1px, 2px) rotate(0deg);
+        }
+        100% {
+          transform: translate(1px, -2px) rotate(-1deg);
+        }
+      }
+      #devtools-blocker {
+        position: fixed;
+        inset: 0;
+        background: white;
+        z-index: 999999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        font-weight: bold;
+        color: red;
+        animation: shake 0.5s infinite;
+        flex-direction: column;
+        text-align: center;
+      }
+      #page-loader {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at center, #000 20%, #0a0a1a 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        color: white;
+        font-family: sans-serif;
+        font-size: 18px;
+        overflow: hidden;
+        transition: opacity 0.5s ease;
+      }
+
+      .solar-system {
+        position: relative;
+        width: 200px;
+        height: 200px;
+      }
+
+      .sun {
+        width: 30px;
+        height: 30px;
+        background: radial-gradient(circle, #ffdd00, #ff8800);
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 20px #ff8800;
+      }
+
+      .orbit {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border: 1px dashed rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .orbit1 {
+        width: 80px;
+        height: 80px;
+        animation: spin 4s linear infinite;
+      }
+      .orbit2 {
+        width: 120px;
+        height: 120px;
+        animation: spin 7s linear infinite;
+      }
+      .orbit3 {
+        width: 160px;
+        height: 160px;
+        animation: spin 10s linear infinite;
+      }
+
+      .planet {
+        position: absolute;
+        top: 50%;
+        left: 0%;
+        transform: translateY(-50%);
+        border-radius: 50%;
+      }
+
+      .planet1 {
+        width: 10px;
+        height: 10px;
+        background: #00f2fe;
+        box-shadow: 0 0 8px #00f2fe;
+      }
+
+      .planet2 {
+        width: 12px;
+        height: 12px;
+        background: #4facfe;
+        box-shadow: 0 0 8px #4facfe;
+      }
+
+      .planet3 {
+        width: 14px;
+        height: 14px;
+        background: #ff3cac;
+        box-shadow: 0 0 8px #ff3cac;
+      }
+
+      @keyframes spin {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      .loader-text {
+        margin-top: 20px;
+        font-size: 16px;
+        color: #ccc;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        text-align: center;
+        background: #f0f2f5;
+        padding: 40px 20px;
+      }
+
+      h1 {
+        margin-bottom: 30px;
+        font-size: 32px;
+        color: #333;
+      }
+
+      .btn-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .btn-list a {
+        background-color: #007bff;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.2s;
+      }
+
+      .btn-list a:hover {
+        background-color: #0056b3;
+      }
+
+      /* Popup for unavailable lessons */
+      #popup {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      #popup-content {
+        background: white;
+        padding: 24px 32px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        max-width: 90%;
+      }
+
+      #popup-content p {
+        font-size: 18px;
+        color: #c0392b;
+        margin-bottom: 20px;
+      }
+
+      #popup-content button {
+        background-color: #c0392b;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      #popup-content button:hover {
+        background-color: #a93226;
+      }
+
+      /* Block mobile */
+      #mobile-blocker {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 999999;
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        line-height: 1.6;
+      }
+
+      .mobile-message {
+        max-width: 500px;
+      }
+      .popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 99999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Orbitron", sans-serif;
+      }
+
+      .popup-content {
+        background: #0f0f1a;
+        border: 2px solid #00ffff;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 480px;
+        padding: 24px;
+        box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff;
+        color: #00ffff;
+        animation: pulseGlow 1.5s infinite alternate;
+      }
+
+      @keyframes pulseGlow {
+        from {
+          box-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
+        }
+        to {
+          box-shadow: 0 0 20px #00ffff, 0 0 60px #ff00ff;
+        }
+      }
+
+      .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        font-size: 22px;
+        margin-bottom: 12px;
+        color: #ff00ff;
+      }
+
+      .popup-body p {
+        margin: 12px 0;
+        line-height: 1.6;
+        color: #00ff99;
+        font-size: 15px;
+        font-style: italic;
+        font-weight: bold;
+      }
+
+      .popup-body a {
+        color: #ff0066;
+        text-decoration: underline;
+        white-space: nowrap;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #ff0066;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .close-btn:hover {
+        transform: scale(1.2);
+      }
+
+      .hide-btn {
+        background-color: transparent;
+        color: #00ffff;
+        border: 1px solid #00ffff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .hide-btn:hover {
+        background-color: #00ffff;
+        color: #0f0f1a;
+      }
+      .feedback-box {
+        background: #ffffff;
+        border: 2px solid #dee2e6;
+        border-radius: 12px;
+        padding: 20px;
+        max-width: 600px;
+        margin: 50px auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      .feedback-box h3 {
+        margin-bottom: 15px;
+        color: #343a40;
+        font-size: 20px;
+        text-align: center;
+      }
+
+      .feedback-box textarea {
+        width: 100%;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 16px;
+        resize: vertical;
+        box-sizing: border-box;
+        min-height: 100px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .feedback-box textarea:focus {
+        border-color: #66afe9;
+        box-shadow: 0 0 6px rgba(102, 175, 233, 0.6);
+      }
+
+      .feedback-box button {
+        margin-top: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        font-size: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: block;
+        width: 100%;
+      }
+
+      .feedback-box button:hover {
+        background-color: #0056b3;
+      }
+
+      .feedback-box p#feedback-status {
+        margin-top: 10px;
+        font-size: 14px;
+        text-align: center;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="announcement-popup" class="popup-overlay">
+      <div class="popup-content">
+        <div class="popup-header">
+          <span>🔔 Thông báo</span>
+          <button class="close-btn" onclick="closePopup()">×</button>
+        </div>
+
+        <div class="popup-body">
+          <p
+            style="
+              font-style: italic;
+              font-weight: bold;
+              color: seagreen;
+              white-space: nowrap;
+            "
+          >
+            Nếu có lỗi hoặc cần hỗ trợ liên hệ với
+            <span style="color: firebrick">chủ web:</span>
+            <a
+              href="https://www.facebook.com/vu.q.huy.795955"
+              target="_blank"
+              style="
+                color: firebrick;
+                text-decoration: underline;
+                white-space: nowrap;
+              "
+            >
+              Tại đây
+            </a>
+          </p>
+          <p
+            style="
+              font-style: italic;
+              font-weight: bold;
+              color: seagreen;
+              white-space: nowrap;
+            "
+          >
+            Hoặc liên hệ với <span style="color: firebrick">supporter:</span>
+            <a
+              href="https://www.facebook.com/nguyenngocanhdev.profile"
+              target="_blank"
+              style="
+                color: firebrick;
+                text-decoration: underline;
+                white-space: nowrap;
+              "
+            >
+              Tại đây
+            </a>
+          </p>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 10px 0" />
+
+        <div class="popup-footer" style="text-align: right">
+          <button
+            onclick="hideFor2Hours()"
+            class="hide-btn"
+            style="padding: 6px 12px; font-size: 13px"
+          >
+            Không hiển thị lại trong 2 giờ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-loader">
+      <div class="solar-system">
+        <div class="sun"></div>
+        <div class="orbit orbit1"><div class="planet planet1"></div></div>
+        <div class="orbit orbit2"><div class="planet planet2"></div></div>
+        <div class="orbit orbit3"><div class="planet planet3"></div></div>
+      </div>
+      <p class="loader-text">Đang khởi động vũ trụ...</p>
+    </div>
+
+    <div id="mobile-blocker">
+      <div class="mobile-message">
+        ⚠ Trang này không hỗ trợ trên điện thoại.<br />
+        Vui lòng sử dụng máy tính để truy cập.
+      </div>
+    </div>
+
+    <div id="popup">
+      <div id="popup-content">
+        <p>🚫 Bài này hiện chưa có. Vui lòng quay lại sau!</p>
+        <button onclick="hidePopup()">Đóng</button>
+      </div>
+    </div>
+
+    <h1>📝 Chọn bài luyện tập</h1>
+    <div class="btn-list">
+      <a href="/bai1">Bài 1</a>
+      <a href="/bai2">Bài 2</a>
+      <a href="/bai3">Bài 3</a>
+      <a href="/bai4">Bài 4</a>
+      <a href="/bai5">Bài 5</a>
+      <a href="/bai6">Bài 6</a>
+      <a href="/bai7">Bài 7</a>
+      <a href="/bai8">Bài 8</a>
+      <a href="/bai9">Bài 9</a>
+    </div>
+
+    <div
+      style="
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        border-radius: 8px;
+        color: #856404;
+        font-size: 16px;
+      "
+    >
+      <strong>⚠️ Lưu ý:</strong> Website hiện tại có thể chưa hoạt động tốt trên
+      điện thoại và còn nhiều lỗi như ko đủ đáp án, và vui lòng ko dùng
+      <strong>Dev Tool</strong> nếu phát hiện sẽ bị khóa key.<br />
+      Vui lòng liên hệ facebook
+      <a
+        href="https://www.facebook.com/vu.q.huy.795955"
+        target="_blank"
+        style="color: #0d6efd; text-decoration: underline"
+        >Tại Đây</a
+      >
+      hoặc
+      <a
+        href="https://zalo.me/g/mdfuis441"
+        target="_blank"
+        style="color: #0d6efd; text-decoration: underline"
+        ><strong>https://zalo.me/g/mdfuis441</strong></a
+      >
+      nhóm zalo để được hỗ trợ nếu gặp lỗi hoặc lấy key.
+    </div>
+    <div class="feedback-box">
+      <h3>💬 Góp ý / Báo lỗi</h3>
+      <textarea
+        id="feedback-input"
+        placeholder="Nhập góp ý của bạn tại đây..."
+      ></textarea>
+      <button onclick="sendFeedback()">Gửi góp ý</button>
+      <p id="feedback-status"></p>
+    </div>
+    <script>
+      const _0x2a858d = _0x3730;
+      (function (_0x8dc2bf, _0x38ddda) {
+        const _0x3158c5 = _0x3730,
+          _0x157ce3 = _0x8dc2bf();
+        while (!![]) {
+          try {
+            const _0x37ed79 =
+              (-parseInt(_0x3158c5(0x147)) / 0x1) *
+                (-parseInt(_0x3158c5(0x14a)) / 0x2) +
+              (-parseInt(_0x3158c5(0x14d)) / 0x3) *
+                (parseInt(_0x3158c5(0x13b)) / 0x4) +
+              -parseInt(_0x3158c5(0x141)) / 0x5 +
+              parseInt(_0x3158c5(0x151)) / 0x6 +
+              parseInt(_0x3158c5(0x14e)) / 0x7 +
+              (parseInt(_0x3158c5(0x149)) / 0x8) *
+                (parseInt(_0x3158c5(0x13a)) / 0x9) +
+              (parseInt(_0x3158c5(0x13f)) / 0xa) *
+                (-parseInt(_0x3158c5(0x146)) / 0xb);
+            if (_0x37ed79 === _0x38ddda) break;
+            else _0x157ce3["push"](_0x157ce3["shift"]());
+          } catch (_0x419773) {
+            _0x157ce3["push"](_0x157ce3["shift"]());
+          }
+        }
+      })(_0x2688, 0xc4dd5);
+      function _0x3730(_0x211d07, _0x5a9f5b) {
+        const _0x26880f = _0x2688();
+        return (
+          (_0x3730 = function (_0x3730af, _0x261c60) {
+            _0x3730af = _0x3730af - 0x138;
+            let _0x2e19fe = _0x26880f[_0x3730af];
+            return _0x2e19fe;
+          }),
+          _0x3730(_0x211d07, _0x5a9f5b)
+        );
+      }
+      function _0x2688() {
+        const _0x3752a8 = [
+          "flex",
+          "3vIJbwS",
+          "5694675tNlVQW",
+          "page-loader",
+          "display",
+          "9571386dsTVrc",
+          "mobile-blocker",
+          "popup",
+          "overflow",
+          "preventDefault",
+          "9SEQUJK",
+          "2107324jHCxix",
+          "hidden",
+          "test",
+          "none",
+          "610DpjIqC",
+          "getElementById",
+          "5813300xIYFde",
+          "style",
+          "pointerEvents",
+          "load",
+          "body",
+          "77726cOApor",
+          "5kBOoYq",
+          "addEventListener",
+          "2020264EqnkwO",
+          "106234MApOGz",
+          "auto",
+        ];
+        _0x2688 = function () {
+          return _0x3752a8;
+        };
+        return _0x2688();
+      }
+      function isMobile() {
+        const _0x1baa9e = _0x3730;
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i[
+          _0x1baa9e(0x13d)
+        ](navigator["userAgent"]);
+      }
+      if (isMobile()) {
+        const blocker = document[_0x2a858d(0x140)](_0x2a858d(0x152));
+        (blocker[_0x2a858d(0x142)][_0x2a858d(0x150)] = "flex"),
+          (document[_0x2a858d(0x145)][_0x2a858d(0x142)][_0x2a858d(0x138)] =
+            _0x2a858d(0x13c)),
+          (document[_0x2a858d(0x145)][_0x2a858d(0x142)][_0x2a858d(0x143)] =
+            _0x2a858d(0x13e)),
+          (blocker["style"][_0x2a858d(0x143)] = _0x2a858d(0x14b));
+      }
+      window[_0x2a858d(0x148)](_0x2a858d(0x144), () => {
+        const _0x1702b3 = _0x2a858d,
+          _0x5b9d7c = document[_0x1702b3(0x140)](_0x1702b3(0x14f));
+        setTimeout(() => {
+          const _0x436a59 = _0x1702b3;
+          (_0x5b9d7c[_0x436a59(0x142)]["opacity"] = "0"),
+            setTimeout(
+              () => (_0x5b9d7c["style"]["display"] = _0x436a59(0x13e)),
+              0x1f4
+            );
+        }, 0x7d0);
+      });
+      function showPopup(_0x3856e6) {
+        const _0xc20ab8 = _0x2a858d;
+        _0x3856e6[_0xc20ab8(0x139)](),
+          (document[_0xc20ab8(0x140)](_0xc20ab8(0x153))["style"][
+            _0xc20ab8(0x150)
+          ] = _0xc20ab8(0x14c));
+      }
+      function hidePopup() {
+        const _0x11f4d3 = _0x2a858d;
+        document[_0x11f4d3(0x140)](_0x11f4d3(0x153))[_0x11f4d3(0x142)][
+          _0x11f4d3(0x150)
+        ] = _0x11f4d3(0x13e);
+      }
+    </script>
+    <script>
+      function _0x16c8(_0x28b7cd, _0x22cb3a) {
+        const _0x279201 = _0x2792();
+        return (
+          (_0x16c8 = function (_0x16c813, _0x17b1e7) {
+            _0x16c813 = _0x16c813 - 0x122;
+            let _0x5a73c2 = _0x279201[_0x16c813];
+            return _0x5a73c2;
+          }),
+          _0x16c8(_0x28b7cd, _0x22cb3a)
+        );
+      }
+      (function (_0x5770b6, _0xe5e29b) {
+        const _0x415672 = _0x16c8,
+          _0x4fae60 = _0x5770b6();
+        while (!![]) {
+          try {
+            const _0x384267 =
+              parseInt(_0x415672(0x126)) / 0x1 +
+              (parseInt(_0x415672(0x130)) / 0x2) *
+                (-parseInt(_0x415672(0x133)) / 0x3) +
+              -parseInt(_0x415672(0x127)) / 0x4 +
+              (-parseInt(_0x415672(0x134)) / 0x5) *
+                (parseInt(_0x415672(0x12e)) / 0x6) +
+              parseInt(_0x415672(0x12b)) / 0x7 +
+              parseInt(_0x415672(0x12d)) / 0x8 +
+              parseInt(_0x415672(0x129)) / 0x9;
+            if (_0x384267 === _0xe5e29b) break;
+            else _0x4fae60["push"](_0x4fae60["shift"]());
+          } catch (_0x42525c) {
+            _0x4fae60["push"](_0x4fae60["shift"]());
+          }
+        }
+      })(_0x2792, 0xb2dc4);
+      let devtoolsOpen = ![];
+      setInterval(() => {
+        const _0x26ac49 = _0x16c8,
+          _0x3e6836 = 0xa0,
+          _0x17bdbc =
+            window[_0x26ac49(0x128)] - window["innerWidth"] > _0x3e6836 ||
+            window[_0x26ac49(0x12f)] - window[_0x26ac49(0x132)] > _0x3e6836;
+        if (_0x17bdbc && !devtoolsOpen) {
+          (devtoolsOpen = !![]), (document[_0x26ac49(0x125)]["innerHTML"] = "");
+          const _0x49b4a2 = document[_0x26ac49(0x12c)](_0x26ac49(0x123));
+          (_0x49b4a2["id"] = _0x26ac49(0x122)),
+            (_0x49b4a2[_0x26ac49(0x124)] = _0x26ac49(0x12a)),
+            document["body"]["appendChild"](_0x49b4a2);
+          const _0x4c12e0 = new Audio(
+            "https://www.myinstants.com/media/sounds/windows-error.mp3"
+          );
+          _0x4c12e0["play"]()[_0x26ac49(0x131)](() => {});
+        }
+      }, 0x3e8);
+      function _0x2792() {
+        const _0x5c7f0d = [
+          "div",
+          "innerHTML",
+          "body",
+          "1396075jLlxCV",
+          "3320780FbdzqQ",
+          "outerWidth",
+          "5578614PuCLXW",
+          "\x0a\x20\x20\x20\x20\x20\x20\x20\x20🚨\x20<br/>\x20DEVTOOLS\x20DETECTED\x20<br/>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<small\x20style=\x22font-size:\x2016px;\x20color:\x20#555\x22>Code\x20em\x20lỏ\x20mà\x20ăn\x20cắp\x20source\x20hay\x20xem\x20đáp\x20án\x20chi\x20vậy\x20bro</small>\x0a\x20\x20\x20\x20\x20\x20",
+          "7330974kOhSXG",
+          "createElement",
+          "3054872wXXZqm",
+          "18wnlqMi",
+          "outerHeight",
+          "50sZCgWj",
+          "catch",
+          "innerHeight",
+          "117066qVzptR",
+          "1511175zsLfXF",
+          "devtools-blocker",
+        ];
+        _0x2792 = function () {
+          return _0x5c7f0d;
+        };
+        return _0x2792();
+      }
+    </script>
+    <script>
+      const popupKey = "popupHiddenUntil";
+
+      function closePopup() {
+        const popup = document.getElementById("announcement-popup");
+        popup.style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+
+      function hideFor2Hours() {
+        const until = Date.now() + 2 * 60 * 60 * 1000;
+        localStorage.setItem(popupKey, until.toString());
+        closePopup();
+      }
+
+      window.addEventListener("load", () => {
+        const popup = document.getElementById("announcement-popup");
+        const hiddenUntil = localStorage.getItem(popupKey);
+
+        if (!hiddenUntil || Date.now() > parseInt(hiddenUntil)) {
+          popup.style.display = "flex";
+          document.body.style.overflow = "hidden";
+        } else {
+          popup.style.display = "none";
+          document.body.style.overflow = "auto";
+        }
+      });
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCcnhBvMUZxjo8Ndtq1YGfnm6BtK2dQthk",
+        authDomain: "keyforid-41653.firebaseapp.com",
+        projectId: "keyforid-41653",
+        storageBucket: "keyforid-41653.appspot.com",
+        messagingSenderId: "410297104288",
+        appId: "1:410297104288:web:a56c2f22ee6818e0bad6c5",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      async function getFingerprint() {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        return result.visitorId;
+      }
+
+      async function logKeyUsage(key, fingerprint) {
+        const timestamp = Date.now();
+        const userAgent = navigator.userAgent;
+        let ip = "unknown";
+
+        try {
+          const res = await fetch("https://api.ipify.org?format=json");
+          const data = await res.json();
+          ip = data.ip;
+        } catch (e) {
+          console.warn("⚠️ Không thể lấy IP:", e);
+        }
+
+        const logId = `${key}_${timestamp}`;
+        await db.collection("logs").doc(logId).set({
+          key: key,
+          fingerprint: fingerprint,
+          userAgent: userAgent,
+          ip: ip,
+          usedAt: timestamp,
+          status: "key_used",
+        });
+
+        console.log("📌 Đã ghi log:", logId);
+      }
+
+      function startCountdown(expireTime) {
+        const countdownEl = document.getElementById("countdown");
+        countdownEl.style.display = "block";
+
+        function update() {
+          const now = Date.now();
+          const remaining = expireTime - now;
+
+          if (remaining <= 0) {
+            countdownEl.textContent = "⏰ Hết hạn!";
+            localStorage.removeItem("validKey");
+            alert("⏰ Key đã hết hạn. Vui lòng nhập lại key.");
+            location.reload();
+            return;
+          }
+
+          const h = Math.floor(remaining / (1000 * 60 * 60));
+          const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((remaining % (1000 * 60)) / 1000);
+
+          countdownEl.textContent = `⏳ Còn lại: ${h}h ${m}m ${s}s`;
+        }
+
+        update();
+        setInterval(update, 1000);
+      }
+
+      async function checkKey() {
+        const key = document.getElementById("keyInput").value.trim();
+        const resultBox = document.getElementById("result");
+
+        if (!key) {
+          resultBox.innerText = "⚠️ Vui lòng nhập key.";
+          return;
+        }
+
+        try {
+          const doc = await db.collection("keys").doc(key).get();
+          if (!doc.exists) {
+            resultBox.innerText = "❌ Key không tồn tại!";
+            return;
+          }
+
+          const data = doc.data();
+          const now = Date.now();
+          const createdAt = data.createdAt || 0;
+          const duration = data.duration || 2 * 60 * 60 * 1000;
+          const fingerprint = await getFingerprint();
+
+          if (data.banned === true) {
+            resultBox.innerText = "🚫 Key đã bị khóa.";
+            return;
+          }
+
+          if (now - createdAt > duration) {
+            resultBox.innerText = "⏰ Key đã hết hạn!";
+            return;
+          }
+
+          if (data.fingerprint && data.fingerprint !== fingerprint) {
+            resultBox.innerText = "❌ Key đã được dùng trên thiết bị khác!";
+            return;
+          }
+
+          if (!data.fingerprint) {
+            await db.collection("keys").doc(key).update({ fingerprint });
+          }
+
+          await logKeyUsage(key, fingerprint);
+          document.getElementById("overlayKey").style.display = "none";
+          document.body.style.overflow = "auto";
+          localStorage.setItem("validKey", key);
+          startCountdown(createdAt + duration);
+        } catch (err) {
+          console.error("❌ Lỗi checkKey:", err);
+          resultBox.innerText = "❌ Có lỗi xảy ra!";
+        }
+      }
+
+      window.onload = async () => {
+        document.body.style.overflow = "hidden";
+        const savedKey = localStorage.getItem("validKey");
+
+        if (savedKey) {
+          try {
+            const doc = await db.collection("keys").doc(savedKey).get();
+            if (doc.exists) {
+              const data = doc.data();
+              const now = Date.now();
+              const createdAt = data.createdAt || 0;
+              const duration = data.duration || 2 * 60 * 60 * 1000;
+              const fingerprint = await getFingerprint();
+
+              if (
+                now - createdAt <= duration &&
+                data.fingerprint === fingerprint &&
+                data.banned !== true
+              ) {
+                document.getElementById("overlayKey").style.display = "none";
+                document.body.style.overflow = "auto";
+                startCountdown(createdAt + duration);
+                return;
+              }
+            }
+            localStorage.removeItem("validKey");
+          } catch (err) {
+            console.error("❌ Lỗi kiểm tra key:", err);
+            localStorage.removeItem("validKey");
+          }
+        }
+      };
+    </script>
+    <script>
+      const feedbackCooldownKey = "lastFeedbackTime";
+
+      async function sendFeedback() {
+        const input = document.getElementById("feedback-input").value.trim();
+        const status = document.getElementById("feedback-status");
+
+        if (!input) {
+          status.innerText = "⚠️ Vui lòng nhập góp ý.";
+          status.style.color = "red";
+          return;
+        }
+
+        const now = Date.now();
+        const lastTime = localStorage.getItem(feedbackCooldownKey);
+        const twoHours = 2 * 60 * 60 * 1000;
+
+        if (lastTime && now - parseInt(lastTime) < twoHours) {
+          const left = Math.ceil((twoHours - (now - lastTime)) / 60000);
+          status.innerText = `⏳ Bạn chỉ được gửi góp ý mỗi 2 tiếng. Thử lại sau ${left} phút.`;
+          status.style.color = "orange";
+          return;
+        }
+
+        try {
+          await firebase
+            .firestore()
+            .collection("feedbacks")
+            .add({
+              message: input,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              userAgent: navigator.userAgent,
+              timestamp: new Date().toLocaleString("vi-VN"),
+            });
+
+          status.innerText = "✅ Gửi góp ý thành công! Cảm ơn bạn.";
+          status.style.color = "green";
+          document.getElementById("feedback-input").value = "";
+          localStorage.setItem(feedbackCooldownKey, now.toString());
+        } catch (err) {
+          console.error("❌ Lỗi gửi góp ý:", err);
+          status.innerText = "❌ Gửi góp ý thất bại. Thử lại sau.";
+          status.style.color = "red";
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,3903 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>English Practice Test – Bài 6</title>
+    <style>
+      #overlayKey {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 15, 15, 0.95);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #f5f5f5;
+        font-family: "Segoe UI", sans-serif;
+        text-align: center;
+        padding: 30px;
+      }
+
+      #overlayKey h2 {
+        font-size: 26px;
+        margin-bottom: 20px;
+        color: #e0e0e0;
+      }
+
+      #overlayKey input {
+        padding: 12px 16px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background-color: #222;
+        color: #f5f5f5;
+        width: 260px;
+        margin-bottom: 15px;
+        outline: none;
+      }
+
+      #overlayKey input::placeholder {
+        color: #aaa;
+      }
+
+      #overlayKey button {
+        padding: 12px 22px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        background: linear-gradient(135deg, #26c6da, #00acc1);
+        color: white;
+        font-weight: bold;
+        transition: background 0.3s ease;
+      }
+
+      #overlayKey button:hover {
+        background: linear-gradient(135deg, #00bcd4, #00838f);
+      }
+
+      #result {
+        color: #f06292;
+        font-weight: bold;
+        margin-top: 12px;
+      }
+      #page-loader {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at center, #000 20%, #0a0a1a 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        color: white;
+        font-family: sans-serif;
+        font-size: 18px;
+        overflow: hidden;
+        transition: opacity 0.5s ease;
+      }
+
+      .solar-system {
+        position: relative;
+        width: 200px;
+        height: 200px;
+      }
+
+      .sun {
+        width: 30px;
+        height: 30px;
+        background: radial-gradient(circle, #ffdd00, #ff8800);
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 20px #ff8800;
+      }
+
+      .orbit {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border: 1px dashed rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .orbit1 {
+        width: 80px;
+        height: 80px;
+        animation: spin 4s linear infinite;
+      }
+      .orbit2 {
+        width: 120px;
+        height: 120px;
+        animation: spin 7s linear infinite;
+      }
+      .orbit3 {
+        width: 160px;
+        height: 160px;
+        animation: spin 10s linear infinite;
+      }
+
+      .planet {
+        position: absolute;
+        top: 50%;
+        left: 0%;
+        transform: translateY(-50%);
+        border-radius: 50%;
+      }
+
+      .planet1 {
+        width: 10px;
+        height: 10px;
+        background: #00f2fe;
+        box-shadow: 0 0 8px #00f2fe;
+      }
+
+      .planet2 {
+        width: 12px;
+        height: 12px;
+        background: #4facfe;
+        box-shadow: 0 0 8px #4facfe;
+      }
+
+      .planet3 {
+        width: 14px;
+        height: 14px;
+        background: #ff3cac;
+        box-shadow: 0 0 8px #ff3cac;
+      }
+
+      @keyframes spin {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      .loader-text {
+        margin-top: 20px;
+        font-size: 16px;
+        color: #ccc;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+      @keyframes shake {
+        0% {
+          transform: translate(1px, 1px) rotate(0deg);
+        }
+        10% {
+          transform: translate(-1px, -2px) rotate(-1deg);
+        }
+        20% {
+          transform: translate(-3px, 0px) rotate(1deg);
+        }
+        30% {
+          transform: translate(3px, 2px) rotate(0deg);
+        }
+        40% {
+          transform: translate(1px, -1px) rotate(1deg);
+        }
+        50% {
+          transform: translate(-1px, 2px) rotate(-1deg);
+        }
+        60% {
+          transform: translate(-3px, 1px) rotate(0deg);
+        }
+        70% {
+          transform: translate(3px, 1px) rotate(-1deg);
+        }
+        80% {
+          transform: translate(-1px, -1px) rotate(1deg);
+        }
+        90% {
+          transform: translate(1px, 2px) rotate(0deg);
+        }
+        100% {
+          transform: translate(1px, -2px) rotate(-1deg);
+        }
+      }
+      #mobile-blocker {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 999999;
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        line-height: 1.6;
+      }
+
+      .mobile-message {
+        max-width: 500px;
+      }
+
+      #devtools-blocker {
+        position: fixed;
+        inset: 0;
+        background: white;
+        z-index: 999999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        font-weight: bold;
+        color: red;
+        animation: shake 0.5s infinite;
+        flex-direction: column;
+        text-align: center;
+      }
+      #completion-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .popup-content {
+        background: #ffffff;
+        padding: 24px 32px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        text-align: center;
+      }
+
+      .popup-content h2 {
+        margin-bottom: 12px;
+        color: #2e7d32;
+      }
+
+      .popup-content button {
+        padding: 8px 16px;
+        margin-top: 12px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .popup-content button:hover {
+        background-color: #388e3c;
+      }
+
+      #countdown-timer:empty {
+        display: none;
+      }
+      #popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #popup-box {
+        background: white;
+        padding: 20px 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 400px;
+        font-family: Arial, sans-serif;
+      }
+
+      body.popup-active *:not(#popup-overlay):not(#popup-overlay *) {
+        pointer-events: none;
+        user-select: none;
+      }
+      body.popup-active {
+        overflow: hidden;
+      }
+
+      .sentence-question {
+        margin-bottom: 30px;
+        padding: 16px;
+        border: 2px solid #d0e2ff;
+        border-radius: 10px;
+        background-color: #f7fbff;
+        box-shadow: 0 2px 5px rgba(0, 123, 255, 0.05);
+      }
+
+      .sentence-question p {
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #003366;
+      }
+
+      .word-bank,
+      .drop-area {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 14px;
+        border: 2px dashed #8ecae6;
+        border-radius: 8px;
+        background-color: #edf6f9;
+        min-height: 60px;
+        margin-top: 10px;
+      }
+
+      .word-bank {
+        background-color: #fff;
+        border-color: #90e0ef;
+      }
+
+      .word-bank span,
+      .drop-area span {
+        display: inline-block;
+        background-color: #caf0f8;
+        border: 1px solid #0077b6;
+        color: #023e8a;
+        padding: 8px 14px;
+        font-size: 1rem;
+        border-radius: 6px;
+        cursor: move;
+        transition: background-color 0.2s;
+        user-select: none;
+      }
+
+      .word-bank span:hover,
+      .drop-area span:hover {
+        background-color: #ade8f4;
+      }
+
+      .drop-area span {
+        background-color: #ffd6a5;
+        border-color: #ffb703;
+        color: #6a4c00;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+
+        /* Ngăn chọn văn bản */
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
+      .container {
+        background: #fff;
+        max-width: 950px;
+        margin: auto;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h2,
+      h3 {
+        text-align: center;
+      }
+      h3 {
+        margin-top: 40px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 5px;
+      }
+      .question-block {
+        margin-bottom: 25px;
+        border: 1px solid #ccc;
+        border-left: 5px solid #007bff;
+        padding: 15px;
+        border-radius: 5px;
+        background: #fafafa;
+      }
+      .question-block p {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .option {
+        padding: 8px 0;
+        margin-left: 20px;
+      }
+      .option input[type="radio"] {
+        margin-right: 8px;
+      }
+      button {
+        display: block;
+        margin: 30px auto 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+      .result {
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .sentence-sort {
+        margin-bottom: 30px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+      }
+      .sortable {
+        list-style-type: none;
+        padding: 0;
+        margin: 10px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .sortable li {
+        padding: 6px 12px;
+        background-color: #e0e0e0;
+        border: 1px solid #aaa;
+        border-radius: 4px;
+        cursor: move;
+      }
+      .result {
+        margin-top: 15px;
+        font-weight: bold;
+      }
+      .reading-passage {
+        background-color: #f0f8ff;
+        border: 1px solid #007acc;
+        padding: 16px;
+        margin: 24px 0 12px 0;
+        border-radius: 8px;
+        font-style: normal;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #003366;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+
+      .reading-passage::before {
+        content: "📘 Reading passage:";
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #005599;
+      }
+      .passage {
+        background-color: #fff9e6;
+        border: 1px solid #ffc107;
+        padding: 16px;
+        margin: 24px 0 12px 0;
+        border-radius: 8px;
+        font-style: normal;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #5a4300;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+      }
+
+      .passage::before {
+        content: "📖 Read this text:";
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #cc8400;
+      }
+      .shufflable {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 12px;
+        background-color: #f8f9fa;
+        border: 1px dashed #aaa;
+        border-radius: 8px;
+        font-style: normal;
+        margin-bottom: 16px;
+      }
+
+      .shufflable span {
+        display: inline-block;
+        background-color: #e7f1ff;
+        color: #003366;
+        padding: 6px 10px;
+        border: 1px solid #99c;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: "Segoe UI", sans-serif;
+      }
+      @keyframes wiggleFloat {
+        0%,
+        100% {
+          transform: translateX(0);
+          opacity: 0.6;
+        }
+        25% {
+          transform: translateX(-3px);
+        }
+        50% {
+          transform: translateX(3px);
+          opacity: 1;
+        }
+        75% {
+          transform: translateX(-2px);
+        }
+      }
+
+      #global-skip-btn {
+        animation: wiggleFloat 2s ease-in-out infinite;
+      }
+
+      #global-skip-btn:hover {
+        opacity: 1;
+      }
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #333;
+        color: #fff;
+        padding: 12px 18px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        font-size: 14px;
+        z-index: 9999;
+      }
+
+      .toast.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div
+      id="countdown"
+      style="
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.75);
+        color: #fff;
+        font-size: 13px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-family: 'Arial', sans-serif;
+        z-index: 999;
+        display: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      "
+    >
+      ⏳
+    </div>
+    <div
+      id="overlayKey"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <h2>🔐 Nhập key để truy cập bài học</h2>
+      <input id="keyInput" placeholder="Nhập key..." />
+      <button onclick="checkKey()">Xác nhận</button>
+      <div
+        id="result"
+        style="margin-top: 10px; font-weight: bold; color: red"
+      ></div>
+    </div>
+    <div id="notify-toast" class="toast">Thông báo</div>
+
+    <div id="page-loader">
+      <div class="solar-system">
+        <div class="sun"></div>
+        <div class="orbit orbit1"><div class="planet planet1"></div></div>
+        <div class="orbit orbit2"><div class="planet planet2"></div></div>
+        <div class="orbit orbit3"><div class="planet planet3"></div></div>
+      </div>
+      <p class="loader-text">Đang khởi động vũ trụ...</p>
+    </div>
+
+    <button
+      id="global-skip-btn"
+      onclick="skipLoaderFor2Hours()"
+      style="display: none"
+    >
+      ⏭ Bỏ qua loading trong 2h
+    </button>
+
+    <div id="mobile-blocker">
+      <div class="mobile-message">
+        ⚠ Trang này không hỗ trợ trên điện thoại.<br />
+        Vui lòng sử dụng máy tính để truy cập.
+      </div>
+    </div>
+    <div id="completion-popup" style="display: none">
+      <div class="popup-content">
+        <h2 id="completion-message">🎉 Bạn đã hoàn thành bài thi!</h2>
+        <p>Chúc mừng bạn đã trả lời đúng tất cả câu hỏi.</p>
+        <button onclick="closeCompletionPopup()">Đóng</button>
+      </div>
+    </div>
+
+    <div id="popup-overlay" style="display: none">
+      <div id="popup-box">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <strong>🔔 Thông báo</strong>
+          <button
+            onclick="closePopup()"
+            style="
+              border: none;
+              background: transparent;
+              font-size: 20px;
+              cursor: pointer;
+            "
+          >
+            ×
+          </button>
+        </div>
+        <p>
+          <b style="color: teal"
+            >Đây là web tạo ra với việc phục vụ cho luyện tập bài ktra và có thể
+            đáp án chưa đầy đủ, còn nhiều lỗi và ko hđộng trên đth.</b
+          >
+        </p>
+        <p>
+          <b style="color: teal"
+            >Mong mọi người thông cảm! Nếu cần hỗ trợ, vui lòng liên hệ:</b
+          >
+          <b style="color: #c0392b">https://www.facebook.com/vu.q.huy.795955</b>
+        </p>
+        <button
+          onclick="closeFor2Hours()"
+          style="
+            margin-top: 10px;
+            background: #c0392b;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+          "
+        >
+          Không hiển thị lại trong 2 giờ
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <h2>English Practice Test – Bài 6</h2>
+      <div
+        id="countdown-timer"
+        style="
+          position: fixed;
+          top: 16px;
+          right: 16px;
+          background: #fff3cd;
+          border: 2px solid #ffa726;
+          padding: 8px 12px;
+          font-weight: bold;
+          font-size: 16px;
+          color: #d84315;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          z-index: 9999;
+        "
+      ></div>
+      <button
+        onclick="startOneMinuteChallenge()"
+        style="margin: 12px 0; padding: 8px 16px"
+      >
+        🕐 Thử sức trong 5 phút
+      </button>
+
+      <!-- PART I -->
+      <h3>I. Choose the correct English translation</h3>
+      <div id="part-I">
+        <div class="question-block" data-correct="A">
+          <p>1. Anh ấy luôn mua quà lưu niệm ở cửa hàng này.</p>
+          <div class="option">
+            <label
+              ><input name="q1" type="radio" value="A" /> He always buys
+              souvenirs in this shop.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q1" type="radio" value="B" /> He always buys bags in
+              this shop.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q1" type="radio" value="C" /> He always sells
+              souvenirs to this shop.</label
+            >
+          </div>
+        </div>
+        <div class="question-block" data-correct="A">
+          <p>2. Mia thường đặt phòng khách sạn trực tuyến.</p>
+          <div class="option">
+            <label
+              ><input name="q2" type="radio" value="A" /> Mia often books hotel
+              rooms online.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q2" type="radio" value="B" /> Mia often books train
+              tickets online.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q2" type="radio" value="C" /> Mia often cleans hotel
+              rooms online.</label
+            >
+          </div>
+        </div>
+        <div class="question-block" data-correct="B">
+          <p>3. Tôi vừa đặt vé khứ hồi đi Nha Trang cuối tuần này.</p>
+          <div class="option">
+            <label
+              ><input name="q3" type="radio" value="A" /> I have just booked a
+              double room in Nha Trang this weekend.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q3" type="radio" value="B" /> I have just booked a
+              return ticket to Nha Trang this weekend.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q3" type="radio" value="C" />I have just booked a
+              single ticket to Nha Trang this weekend.</label
+            >
+          </div>
+        </div>
+        <div class="question-block" data-correct="A">
+          <p>4. Thường là sau khi đến nơi tôi mới đi tìm khách sạn.</p>
+          <div class="option">
+            <label
+              ><input name="q4" type="radio" value="A" /> I normally find a
+              hotel after I arrive.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q4" type="radio" value="B" /> I often book a hotel
+              after I arrive.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q4" type="radio" value="C" /> I never find a hotel
+              before I arrive.
+            </label>
+          </div>
+        </div>
+        <div class="question-block" data-correct="B">
+          <p>
+            5. Chúng tôi thường mua đồ ăn ở các chợ địa phương khi đi du lịch.
+          </p>
+          <div class="option">
+            <label
+              ><input name="q5" type="radio" value="A" /> We never buy food at
+              local shops when we travel home from holiday.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q5" type="radio" value="B" /> We usually buy food at
+              local markets when we go on holiday.
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q5" type="radio" value="C" /> We usually buy
+              souvenirs at local markets when we go on holiday.</label
+            >
+          </div>
+        </div>
+      </div>
+
+      <button onclick="submitAnswers('q1', 5, 'result-I')">
+        Submit Part I
+      </button>
+      <div class="result" id="result-I"></div>
+      <button onclick="resetPart('q1', 5, 'result-I')">Reset Part I</button>
+      <!-- PART II -->
+      <h3>II. Choose the best option A, B or C to complete the sentences</h3>
+      <div id="part-II">
+        <div class="question-block" data-correct="B">
+          <p>
+            6. ........... the picture on the bedroom wall or living room wall?
+          </p>
+          <div class="option">
+            <label
+              ><input name="q6" type="radio" value="A" /> Should hang I
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q6" type="radio" value="B" /> Should I hang
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q6" type="radio" value="C" /> I should hang
+            </label>
+          </div>
+        </div>
+        <div class="question-block" data-correct="C">
+          <p>
+            7. Mike has a very bad toothache. He............the dentist as soon
+            as possible.
+          </p>
+          <div class="option">
+            <label
+              ><input name="q7" type="radio" value="A" /> shoulds see
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q7" type="radio" value="B" /> should seeing
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q7" type="radio" value="C" /> should see
+            </label>
+          </div>
+        </div>
+        <div class="question-block" data-correct="A">
+          <p>
+            8. It's going to rain. You...........an umbrella when you go out.
+          </p>
+          <div class="option">
+            <label
+              ><input name="q8" type="radio" value="A" /> should take
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q8" type="radio" value="B" /> shoulds take
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q8" type="radio" value="C" /> should taking</label
+            >
+          </div>
+        </div>
+        <div class="question-block" data-correct="B">
+          <p>
+            9. Norway is very cold in December and January. You
+            ............there in winter.
+          </p>
+          <div class="option">
+            <label
+              ><input name="q9" type="radio" value="A" /> should not going
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q9" type="radio" value="B" /> shouldn't go
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q9" type="radio" value="C" /> shouldn't be go</label
+            >
+          </div>
+        </div>
+        <div class="question-block" data-correct="C">
+          <p>10. I'm going to Da Lat for a few days. Where...............?</p>
+          <div class="option">
+            <label
+              ><input name="q10" type="radio" value="A" /> do I should stay
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q10" type="radio" value="B" /> I should stay
+            </label>
+          </div>
+          <div class="option">
+            <label
+              ><input name="q10" type="radio" value="C" /> should I stay</label
+            >
+          </div>
+        </div>
+      </div>
+
+      <button onclick="submitAnswers('q6', 5, 'result-II')">
+        Submit Part II
+      </button>
+      <div class="result" id="result-II"></div>
+      <button onclick="resetPart('q6', 5, 'result-II')">Reset Part II</button>
+    </div>
+    <!-- PART III -->
+    <!-- PART III -->
+    <h3>III. Reading comprehension</h3>
+    <div id="part-III">
+      <!-- Question 11 -->
+      <div class="question-block" data-correct="B">
+        <div class="reading-passage">
+          <p>
+            Fifty years ago, nobody lived in Antarctica but now between 1,000
+            and 5,000 scientists live and work there all year, and over 50,000
+            tourists visit every year. The main way for tourists to visit the
+            continent is by ship. There are no hotels, so cruise holidays are
+            very popular. As a result of so many tourists, some people think the
+            numbers of wild animals and birds are decreasing.
+          </p>
+        </div>
+        <p>11. How is Antarctica different from 50 years ago?</p>
+        <div class="option">
+          <label
+            ><input name="q11" type="radio" value="A" /> There are more hotels.
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q11" type="radio" value="B" /> There are more people.
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q11" type="radio" value="C" /> There are more wild
+            animals and birds.</label
+          >
+        </div>
+      </div>
+
+      <!-- Question 12 -->
+      <div class="question-block" data-correct="C">
+        <div class="reading-passage">
+          <p>
+            I don't like holidays with hotels, beaches and swimming pools, and
+            I'm not interested in sightseeing in old cities. So for my next
+            holiday, I plan to do something exciting outdoors. There are so many
+            tour companies on the internet offering that type of holiday. One
+            company takes backpacking trips over the Andes of South America.
+            Another company has animal safaris in Africa.
+          </p>
+        </div>
+        <p>12. What type of holidays does the writer prefer?</p>
+        <div class="option">
+          <label
+            ><input name="q12" type="radio" value="A" /> sightseeing holidays in
+            old cities
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q12" type="radio" value="B" /> relaxing holidays with
+            hotels and beaches
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q12" type="radio" value="C" /> holidays with outdoor
+            activities
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 13 -->
+      <div class="question-block" data-correct="B">
+        <div class="reading-passage">
+          <p>
+            I don't like holidays with hotels, beaches and swimming pools, and
+            I'm not interested in sightseeing in old cities. When I choose a
+            holiday, I don't want to go somewhere and see lots of other
+            tourists. I want to be the only person there, which is difficult
+            these days. Is there anywhere in the world without other people?
+            What about Antarctica?
+          </p>
+        </div>
+        <p>13. What type of holiday destination does the writer prefer?</p>
+        <div class="option">
+          <label
+            ><input name="q13" type="radio" value="A" /> a crowded city with
+            many tourists
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q13" type="radio" value="B" /> a quiet place without
+            other people
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q13" type="radio" value="C" /> a holiday with hotels
+            and beaches
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 14 -->
+      <div class="question-block" data-correct="B">
+        <div class="reading-passage">
+          <p>
+            When I choose a holiday, I don't want to go somewhere and see lots
+            of other tourists. I want to be the only person there. Antarctica
+            should be perfect for me. It's huge, it's quiet and it's thousands
+            of kilometres away from other countries. It doesn't have a
+            government and there are no cities, so there's no pollution or noisy
+            traffic. It has lots of wildlife.
+          </p>
+        </div>
+        <p>
+          14. Why is the writer thinking about going to Antarctica for holiday?
+        </p>
+        <div class="option">
+          <label
+            ><input name="q14" type="radio" value="A" /> Because it is thousands
+            of kilometres from wildlife.
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q14" type="radio" value="B" /> Because there are
+            probably not many people there.
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q14" type="radio" value="C" /> Because there are lots
+            of people and cities there.
+          </label>
+        </div>
+      </div>
+
+      <!-- Question 15 -->
+      <div class="question-block" data-correct="C">
+        <div class="reading-passage">
+          <p>
+            There are no hotels in Antarctica, so cruise holidays are very
+            popular. As a result of so many tourists, some people think the
+            numbers of wild animals and birds are decreasing. Many cruise
+            companies teach their passengers about the wildlife in Antarctica
+            and give money to environmental organizations in the region. These
+            organizations want to help the nature and wildlife of Antarctica so
+            it doesn't change in the future.
+          </p>
+        </div>
+        <p>15. What do cruise companies do to the changes in Antarctica?</p>
+        <div class="option">
+          <label
+            ><input name="q15" type="radio" value="A" /> They give money to
+            passengers to protect the environment.
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q15" type="radio" value="B" /> They take more tourists
+            to visit Antarctica.
+          </label>
+        </div>
+        <div class="option">
+          <label
+            ><input name="q15" type="radio" value="C" /> They help tourists
+            understand wildlife.</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <button onclick="submitAnswers('q11', 5, 'result-III')">
+      Submit Part III
+    </button>
+    <div class="result" id="result-III"></div>
+    <button onclick="resetPart('q11', 5, 'result-III')">Reset Part III</button>
+    <!-- PART IV -->
+    <h3>IV. Fill in the blank (TWO or THREE words from the text)</h3>
+    <div id="part-IV">
+      <div class="question-block" data-correct="animal safaris">
+        <div class="passage">
+          There are so many tour companies on the internet offering holidays
+          outdoors. One company takes backpacking trips over the Andes of South
+          America. Another company has animal safaris in Africa. And you can
+          even go swimming with dolphins with a tour group in Australia.
+        </div>
+        <p>
+          16. Many tour companies offer holidays outdoors, like backpacking
+          trips...........or swimming with dolphins.
+        </p>
+        <input
+          name="q16"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="question-block" data-correct="from other countries">
+        <div class="passage">
+          When I choose a holiday, I don't want to go somewhere and see lots of
+          other tourists. I want to be the only person there. Antarctica should
+          be perfect for me. It's huge, it's quiet and it's thousands of
+          kilometres away from other countries.
+        </div>
+        <p>
+          17. I don't like holidays with lots of other tourists. I like
+          Antarctica because it's huge, quiet and far......................
+        </p>
+        <input
+          name="q17"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="question-block" data-correct="scientists and tourists">
+        <div class="passage">
+          Like many places in the world, Antarctica is changing. Fifty years
+          ago, nobody lived here but now between 1,000 and 5,000 scientists live
+          and work there all year, and over 50,000 tourists visit every year.
+          The main way for tourists to visit the continent is by ship.
+        </div>
+        <p>
+          18. No one lived in Antarctica 50 years ago, but now there are lots
+          of...................
+        </p>
+        <input
+          name="q18"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="question-block" data-correct="animals and birds">
+        <div class="passage">
+          There are no hotels, so cruise holidays are very popular in
+          Antarctica. You can leave the ship during the day and there are guided
+          tours of areas with wildlife. As a result of so many tourists, some
+          people think the numbers of wild animals and birds are decreasing.
+        </div>
+        <p>
+          19. Many people go to Antarctica to see wildlife, so there aren't as
+          many wild.......now as in the past.
+        </p>
+        <input
+          name="q19"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+
+      <div
+        class="question-block"
+        data-correct="and environmental organizations"
+      >
+        <div class="passage">
+          The numbers of wild animals and birds are decreasing, so many cruise
+          companies teach their passengers about the wildlife in Antarctica.
+          They also give money to environmental organizations in the region.
+          These organizations want to protect nature and help the wildlife of
+          Antarctica so it doesn't change in the future.
+        </div>
+        <p>
+          20. Many cruise companies.............are working to protect nature
+          and help the wildlife in Antarctica.
+        </p>
+        <input
+          name="q20"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+
+    <button onclick="submitTextAnswers(16, 5, 'result-IV')">
+      Submit Part IV
+    </button>
+    <div class="result" id="result-IV"></div>
+    <button onclick="resetPart('q16', 5, 'result-IV')">Reset Part IV</button>
+    <!-- PART V -->
+    <h3>V. Complete the prediction with THREE to FOUR WORDS.</h3>
+    <div id="part-V">
+      <div class="question-block" data-correct="shouldn't go to">
+        <div class="passage">
+          <p>
+            I am going to Dublin for a holiday with my family. We are thinking
+            about going in February.
+          </p>
+        </div>
+        <p>
+          21. You..............Dublin in February because it is cold and wet
+          then. June or July is warmer. (go)
+        </p>
+        <input
+          name="q21"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+
+      <div
+        class="question-block"
+        data-correct="ellen should learn|she should learn"
+      >
+        <div class="passage">
+          <p>
+            Ellen is going to Thailand for holiday next month, but she can't
+            speak the Thai language.
+          </p>
+        </div>
+        <p>22. ..............some words and phrases before she goes. (learn)</p>
+        <input
+          name="q22"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="question-block" data-correct="shouldn't go by">
+        <div class="passage">
+          <p>Public transport is slow to the city centre.</p>
+        </div>
+        <p>23. You................bus. A taxi will be faster. (go)</p>
+        <input
+          name="q23"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="question-block" data-correct="should go sightseeing">
+        <div class="passage">
+          <p>I'm going to Italy with my family for a holiday this summer.</p>
+        </div>
+        <p>
+          24. Italy has very old and beautiful buildings. You...............
+          (sightseeing)
+        </p>
+        <input
+          name="q24"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+
+      <div
+        class="question-block"
+        data-correct="should go on holiday|should take a holiday"
+      >
+        <div class="passage">
+          <p>I've worked hard all year and I'm very tired.</p>
+        </div>
+        <p>25. You................. by the sea and have some rest. (holiday)</p>
+        <input
+          name="q25"
+          placeholder="Your answer here"
+          style="width: 90%; margin: 10px 20px; padding: 6px"
+          type="text"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+
+    <button onclick="submitTextAnswers(21, 5, 'result-V')">
+      Submit Part V
+    </button>
+    <div class="result" id="result-V"></div>
+    <button onclick="resetPart('q21', 5, 'result-V')">Reset Part V</button>
+    <!-- PART VI -->
+    <!-- PART VI -->
+    <h3>VI. Sentence ordering</h3>
+    <div class="sentence-ordering" id="part-vi">
+      <!-- Question 14 -->
+      <div
+        class="sentence-question"
+        data-answer="Should I take the bus or a taxi to the city centre?"
+        data-group="q26"
+      >
+        <p>26. Put the words in the correct order:</p>
+        <p>
+          <em class="shufflable"
+            >the bus or /to the /I take /a taxi /city centre? /Should
+          </em>
+        </p>
+
+        <div
+          class="drop-area"
+          ondragover="allowDrop(event)"
+          ondrop="drop(event)"
+        ></div>
+
+        <div class="word-bank" data-group="q26">
+          <span
+            draggable="true"
+            id="phrase_0_0"
+            data-group="q26"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >the bus or</span
+          >
+          <span
+            draggable="true"
+            id="phrase_0_1"
+            data-group="q26"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >to the</span
+          >
+          <span
+            draggable="true"
+            id="phrase_0_2"
+            data-group="q26"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >I take</span
+          >
+          <span
+            draggable="true"
+            id="phrase_0_3"
+            data-group="q26"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >a taxi</span
+          >
+          <span
+            draggable="true"
+            id="phrase_0_4"
+            data-group="q26"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >city centre?</span
+          >
+          <span
+            draggable="true"
+            id="phrase_0_5"
+            data-group="q26"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >Should</span
+          >
+        </div>
+      </div>
+
+      <!-- Question 15 -->
+      <div
+        class="sentence-question"
+        data-answer="We always buy return tickets because we want to save money."
+        data-group="q27"
+      >
+        <p>27. Put the words in the correct order:</p>
+        <p>
+          <em class="shufflable"
+            >We /want to /always buy /because we /save money. /tickets /return
+          </em>
+        </p>
+
+        <div
+          class="drop-area"
+          ondragover="allowDrop(event)"
+          ondrop="drop(event)"
+        ></div>
+
+        <div class="word-bank" data-group="q27">
+          <span
+            draggable="true"
+            id="phrase_1_0"
+            data-group="q27"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >We</span
+          >
+          <span
+            draggable="true"
+            id="phrase_1_1"
+            data-group="q27"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >want to</span
+          >
+          <span
+            draggable="true"
+            id="phrase_1_2"
+            data-group="q27"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >always buy</span
+          >
+          <span
+            draggable="true"
+            id="phrase_1_3"
+            data-group="q27"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >because we</span
+          >
+          <span
+            draggable="true"
+            id="phrase_1_4"
+            data-group="q27"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >save money.</span
+          >
+          <span
+            draggable="true"
+            id="phrase_1_5"
+            data-group="q27"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >tickets</span
+          ><span
+            draggable="true"
+            id="phrase_1_6"
+            data-group="q27"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >return</span
+          >
+        </div>
+      </div>
+
+      <!-- Question 16 -->
+      <div
+        class="sentence-question"
+        data-answer="You should stay in a homestay when you travel there with your family."
+        data-group="q28"
+      >
+        <p>28. Put the words in the correct order:</p>
+        <p>
+          <em class="shufflable">
+            with your family. /travel there /in a homestay /You /should stay
+            /when you
+          </em>
+        </p>
+        <div
+          class="drop-area"
+          ondragover="allowDrop(event)"
+          ondrop="drop(event)"
+        ></div>
+        <div class="word-bank" data-group="q28">
+          <span
+            draggable="true"
+            id="phrase_2_0"
+            data-group="q28"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >with your family.</span
+          >
+          <span
+            draggable="true"
+            id="phrase_2_1"
+            data-group="q28"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >travel there</span
+          >
+          <span
+            draggable="true"
+            id="phrase_2_2"
+            data-group="q28"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >in a homestay</span
+          >
+          <span
+            draggable="true"
+            id="phrase_2_3"
+            data-group="q28"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >You</span
+          >
+          <span
+            draggable="true"
+            id="phrase_2_4"
+            data-group="q28"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >should stay</span
+          >
+          <span
+            draggable="true"
+            id="phrase_2_5"
+            data-group="q28"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >when you</span
+          >
+        </div>
+      </div>
+
+      <!-- Question 17 -->
+      <div
+        class="sentence-question"
+        data-answer="We should take a boat and visit the beautiful islands in Ha Long."
+        data-group="q29"
+      >
+        <p>29. Put the words in the correct order:</p>
+        <p>
+          <em class="shufflable"
+            >We /a boat /the beautiful /take /islands /in Ha Long. /and visit
+            /should
+          </em>
+        </p>
+        <div
+          class="drop-area"
+          ondragover="allowDrop(event)"
+          ondrop="drop(event)"
+        ></div>
+        <div class="word-bank" data-group="q29">
+          <span
+            draggable="true"
+            id="phrase_3_0"
+            data-group="q29"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >We</span
+          >
+          <span
+            draggable="true"
+            id="phrase_3_1"
+            data-group="q29"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >a boat</span
+          >
+          <span
+            draggable="true"
+            id="phrase_3_2"
+            data-group="q29"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >the beautiful</span
+          >
+          <span
+            draggable="true"
+            id="phrase_3_3"
+            data-group="q29"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >take</span
+          >
+          <span
+            draggable="true"
+            id="phrase_3_4"
+            data-group="q29"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >islands</span
+          >
+          <span
+            draggable="true"
+            id="phrase_3_5"
+            data-group="q29"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >in Ha Long.</span
+          ><span
+            draggable="true"
+            id="phrase_3_6"
+            data-group="q29"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >and visit</span
+          ><span
+            draggable="true"
+            id="phrase_3_7"
+            data-group="q29"
+            ondragstart="drag(event)"
+            ondragend="dragEnd(event)"
+            >should</span
+          >
+        </div>
+      </div>
+      <button onclick="checkSentenceOrdering()">Submit Part VI</button>
+      <div class="result" id="result-VI"></div>
+      <button onclick="resetSentenceOrdering()">Reset Part VI</button>
+    </div>
+    <div
+      style="
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        border-radius: 8px;
+        color: #856404;
+        font-size: 16px;
+      "
+    >
+      <strong>⚠️ Lưu ý:</strong> Website hiện tại có thể chưa hoạt động tốt trên
+      điện thoại và còn nhiều lỗi như ko đủ đáp án.<br />
+      Vui lòng liên hệ facebook
+      <a
+        href="https://www.facebook.com/vu.q.huy.795955"
+        target="_blank"
+        style="color: #0d6efd; text-decoration: underline"
+        >Tại Đây</a
+      >
+      hoặc <strong>Zalo: 0778 366 110</strong> để được hỗ trợ nếu gặp lỗi.
+    </div>
+    <script>
+      (function (_0x377184, _0x4f6ba0) {
+        const _0xa4e491 = _0x83f8,
+          _0x6117b1 = _0x377184();
+        while (!![]) {
+          try {
+            const _0x1610c6 =
+              -parseInt(_0xa4e491(0x1e4)) / 0x1 +
+              (-parseInt(_0xa4e491(0x1de)) / 0x2) *
+                (parseInt(_0xa4e491(0x1f0)) / 0x3) +
+              -parseInt(_0xa4e491(0x1f3)) / 0x4 +
+              (parseInt(_0xa4e491(0x1f2)) / 0x5) *
+                (parseInt(_0xa4e491(0x1f1)) / 0x6) +
+              parseInt(_0xa4e491(0x1f5)) / 0x7 +
+              (parseInt(_0xa4e491(0x1e6)) / 0x8) *
+                (-parseInt(_0xa4e491(0x1ec)) / 0x9) +
+              (-parseInt(_0xa4e491(0x1eb)) / 0xa) *
+                (-parseInt(_0xa4e491(0x1ee)) / 0xb);
+            if (_0x1610c6 === _0x4f6ba0) break;
+            else _0x6117b1["push"](_0x6117b1["shift"]());
+          } catch (_0x5800ed) {
+            _0x6117b1["push"](_0x6117b1["shift"]());
+          }
+        }
+      })(_0x824a, 0xc479d);
+      function submitTextAnswers(_0x5087f7, _0x11ff27) {
+        const _0x13336c = _0x83f8,
+          _0x3d91ac = document[_0x13336c(0x1ef)](_0x5087f7),
+          _0x1d9756 = _0x3d91ac["querySelectorAll"](".question-block");
+        let _0x4fe9cd = 0x0,
+          _0x37524d = 0x0;
+        _0x1d9756["forEach"]((_0x2fabe6) => {
+          const _0x33bd98 = _0x13336c,
+            _0x3aac69 = _0x2fabe6[_0x33bd98(0x1ed)](_0x33bd98(0x1e8))
+              ["toLowerCase"]()
+              ["split"]("|")
+              [_0x33bd98(0x1dd)]((_0x34f73b) => _0x34f73b["trim"]()),
+            _0x1d59c4 = _0x2fabe6[_0x33bd98(0x1d5)](_0x33bd98(0x1d9)),
+            _0x167876 = _0x1d59c4[_0x33bd98(0x1dc)]
+              ["trim"]()
+              [_0x33bd98(0x1e9)](),
+            _0x2f7a63 = _0x2fabe6[_0x33bd98(0x1d5)](_0x33bd98(0x1d6));
+          if (_0x2f7a63) _0x2f7a63["remove"]();
+          if (_0x167876 !== "") {
+            _0x37524d++;
+            if (_0x3aac69[_0x33bd98(0x1e1)](_0x167876))
+              _0x4fe9cd++,
+                (_0x2fabe6[_0x33bd98(0x1e3)][_0x33bd98(0x1e5)] = "#d4edda"),
+                (_0x2fabe6[_0x33bd98(0x1e3)][_0x33bd98(0x1d7)] =
+                  _0x33bd98(0x1f8));
+            else {
+              (_0x2fabe6[_0x33bd98(0x1e3)]["backgroundColor"] =
+                _0x33bd98(0x1f4)),
+                (_0x2fabe6[_0x33bd98(0x1e3)]["border"] =
+                  "2px\x20solid\x20#dc3545");
+              const _0x4c9c0b = document[_0x33bd98(0x1e2)]("p");
+              (_0x4c9c0b[_0x33bd98(0x1df)] = _0x33bd98(0x1d8)),
+                (_0x4c9c0b[_0x33bd98(0x1e3)][_0x33bd98(0x1f7)] =
+                  _0x33bd98(0x1f6)),
+                (_0x4c9c0b[_0x33bd98(0x1e3)]["fontStyle"] = "italic"),
+                (_0x4c9c0b[_0x33bd98(0x1e3)]["marginTop"] = "8px"),
+                (_0x4c9c0b["textContent"] =
+                  _0x33bd98(0x1ea) + _0x3aac69[_0x33bd98(0x1e7)]("\x20/\x20")),
+                _0x2fabe6[_0x33bd98(0x1db)](_0x4c9c0b);
+            }
+          } else
+            (_0x2fabe6[_0x33bd98(0x1e3)]["backgroundColor"] = "#fff3cd"),
+              (_0x2fabe6[_0x33bd98(0x1e3)][_0x33bd98(0x1d7)] =
+                _0x33bd98(0x1da));
+        });
+        const _0x1a61e9 = _0x1d9756[_0x13336c(0x1e0)],
+          _0xb8200b = document[_0x13336c(0x1ef)](_0x11ff27);
+        if (_0x37524d < _0x1a61e9) {
+          alert(
+            "⚠\x20Vui\x20lòng\x20điền\x20hết\x20tất\x20cả\x20chỗ\x20trống\x20trước\x20khi\x20nộp."
+          );
+          return;
+        }
+        _0xb8200b &&
+          ((_0xb8200b["innerText"] =
+            "You\x20scored\x20" + _0x4fe9cd + "/" + _0x1a61e9),
+          (_0xb8200b[_0x13336c(0x1e3)][_0x13336c(0x1f7)] =
+            _0x4fe9cd === _0x1a61e9 ? "green" : "red")),
+          checkIfAllPartsCompleted();
+      }
+      function _0x83f8(_0x4c4fe4, _0x528510) {
+        const _0x824a6b = _0x824a();
+        return (
+          (_0x83f8 = function (_0x83f8b6, _0x240af0) {
+            _0x83f8b6 = _0x83f8b6 - 0x1d5;
+            let _0x3c5e10 = _0x824a6b[_0x83f8b6];
+            return _0x3c5e10;
+          }),
+          _0x83f8(_0x4c4fe4, _0x528510)
+        );
+      }
+      function _0x824a() {
+        const _0x3495cd = [
+          "color",
+          "2px\x20solid\x20#28a745",
+          "querySelector",
+          ".correct-answer-hint",
+          "border",
+          "correct-answer-hint",
+          "input[type=\x22text\x22]",
+          "2px\x20dashed\x20#ffc107",
+          "appendChild",
+          "value",
+          "map",
+          "2SPdVaw",
+          "className",
+          "length",
+          "includes",
+          "createElement",
+          "style",
+          "217913tMrBbx",
+          "backgroundColor",
+          "8dLEsTv",
+          "join",
+          "data-correct",
+          "toLowerCase",
+          "Đáp\x20án\x20đúng\x20là:\x20",
+          "1036570wgAAIo",
+          "4615209KyXdDA",
+          "getAttribute",
+          "187zreUKN",
+          "getElementById",
+          "2611941nMDqzf",
+          "1126392sdCttO",
+          "35DaLcjF",
+          "4221424ifNnxE",
+          "#f8d7da",
+          "2696323pNTAPo",
+          "#c0392b",
+        ];
+        _0x824a = function () {
+          return _0x3495cd;
+        };
+        return _0x824a();
+      }
+    </script>
+    <script>
+      (function (_0x35452e, _0xa0f1ca) {
+        const _0x25a850 = _0x4824,
+          _0x491c7e = _0x35452e();
+        while (!![]) {
+          try {
+            const _0x225472 =
+              (parseInt(_0x25a850(0xd5)) / 0x1) *
+                (parseInt(_0x25a850(0xe5)) / 0x2) +
+              (-parseInt(_0x25a850(0xcd)) / 0x3) *
+                (-parseInt(_0x25a850(0xd4)) / 0x4) +
+              parseInt(_0x25a850(0xc9)) / 0x5 +
+              (-parseInt(_0x25a850(0xde)) / 0x6) *
+                (parseInt(_0x25a850(0xe6)) / 0x7) +
+              (parseInt(_0x25a850(0xca)) / 0x8) *
+                (parseInt(_0x25a850(0xcb)) / 0x9) +
+              (parseInt(_0x25a850(0xd8)) / 0xa) *
+                (-parseInt(_0x25a850(0xd7)) / 0xb) +
+              -parseInt(_0x25a850(0xd2)) / 0xc;
+            if (_0x225472 === _0xa0f1ca) break;
+            else _0x491c7e["push"](_0x491c7e["shift"]());
+          } catch (_0x4ebcfc) {
+            _0x491c7e["push"](_0x491c7e["shift"]());
+          }
+        }
+      })(_0x3483, 0xaac9b);
+      function allowDrop(_0x5af0e6) {
+        const _0x4e1027 = _0x4824;
+        _0x5af0e6[_0x4e1027(0xd0)]();
+      }
+      function drag(_0x567c5f) {
+        const _0x1153bf = _0x4824;
+        _0x567c5f[_0x1153bf(0xdc)][_0x1153bf(0xcf)](
+          "text/plain",
+          _0x567c5f[_0x1153bf(0xe4)]["id"]
+        ),
+          setTimeout(() => {
+            const _0x279d6f = _0x1153bf;
+            _0x567c5f[_0x279d6f(0xe4)]["style"]["display"] = _0x279d6f(0xce);
+          }, 0x0);
+      }
+      function _0x3483() {
+        const _0x480a69 = [
+          "word-bank",
+          "inline-block",
+          "target",
+          "28cQzweG",
+          "2684899olNYGn",
+          "getAttribute",
+          "4757380tVnoKz",
+          "8bBpfZJ",
+          "10868337KzHqLN",
+          "getElementById",
+          "1076037FkHLtF",
+          "none",
+          "setData",
+          "preventDefault",
+          "display",
+          "16783500WeqIHU",
+          "text/plain",
+          "12LNFNgD",
+          "63643OsuINB",
+          "getData",
+          "9649915HIaSNJ",
+          "10StEXif",
+          "style",
+          "parentElement",
+          "classList",
+          "dataTransfer",
+          "closest",
+          "18lpSXjm",
+          "data-group",
+          "contains",
+          "drop-area",
+        ];
+        _0x3483 = function () {
+          return _0x480a69;
+        };
+        return _0x3483();
+      }
+      function dragEnd(_0x1f04d3) {
+        const _0x590f75 = _0x4824;
+        _0x1f04d3["target"]["style"][_0x590f75(0xd1)] = "inline-block";
+      }
+      function _0x4824(_0x3a59b5, _0xd5259b) {
+        const _0x34839e = _0x3483();
+        return (
+          (_0x4824 = function (_0x482410, _0xb65f12) {
+            _0x482410 = _0x482410 - 0xc8;
+            let _0x293322 = _0x34839e[_0x482410];
+            return _0x293322;
+          }),
+          _0x4824(_0x3a59b5, _0xd5259b)
+        );
+      }
+      function drop(_0x1d56f0) {
+        const _0x49867f = _0x4824;
+        _0x1d56f0[_0x49867f(0xd0)]();
+        const _0x19a6fc = _0x1d56f0[_0x49867f(0xdc)][_0x49867f(0xd6)](
+            _0x49867f(0xd3)
+          ),
+          _0x910845 = document[_0x49867f(0xcc)](_0x19a6fc);
+        let _0xe41ed8 = _0x1d56f0[_0x49867f(0xe4)];
+        while (
+          _0xe41ed8 &&
+          !_0xe41ed8[_0x49867f(0xdb)][_0x49867f(0xe0)](_0x49867f(0xe1)) &&
+          !_0xe41ed8[_0x49867f(0xdb)]["contains"](_0x49867f(0xe2))
+        ) {
+          _0xe41ed8 = _0xe41ed8[_0x49867f(0xda)];
+        }
+        if (_0xe41ed8 && _0x910845) {
+          const _0x1dc375 = _0x910845[_0x49867f(0xc8)]("data-group"),
+            _0x31ac92 = _0xe41ed8[_0x49867f(0xdd)](".sentence-question")?.[
+              _0x49867f(0xc8)
+            ](_0x49867f(0xdf));
+          if (_0x1dc375 && _0x31ac92 && _0x1dc375 !== _0x31ac92) return;
+          _0xe41ed8["appendChild"](_0x910845),
+            (_0x910845[_0x49867f(0xd9)]["display"] = _0x49867f(0xe3));
+        }
+      }
+    </script>
+    <style>
+      .hidden-dragged {
+        display: none !important;
+      }
+    </style>
+    <script>
+      function _0x2863(_0x1c2012, _0x57f0c4) {
+        const _0x3ae5dc = _0x3ae5();
+        return (
+          (_0x2863 = function (_0x28631a, _0x353954) {
+            _0x28631a = _0x28631a - 0x159;
+            let _0x59cdf6 = _0x3ae5dc[_0x28631a];
+            return _0x59cdf6;
+          }),
+          _0x2863(_0x1c2012, _0x57f0c4)
+        );
+      }
+      (function (_0x2a6361, _0x214ef2) {
+        const _0x54e663 = _0x2863,
+          _0x2e19ec = _0x2a6361();
+        while (!![]) {
+          try {
+            const _0x296f46 =
+              (-parseInt(_0x54e663(0x17b)) / 0x1) *
+                (-parseInt(_0x54e663(0x171)) / 0x2) +
+              (parseInt(_0x54e663(0x184)) / 0x3) *
+                (-parseInt(_0x54e663(0x183)) / 0x4) +
+              (parseInt(_0x54e663(0x15c)) / 0x5) *
+                (parseInt(_0x54e663(0x161)) / 0x6) +
+              -parseInt(_0x54e663(0x17d)) / 0x7 +
+              (parseInt(_0x54e663(0x16d)) / 0x8) *
+                (-parseInt(_0x54e663(0x185)) / 0x9) +
+              (parseInt(_0x54e663(0x16b)) / 0xa) *
+                (parseInt(_0x54e663(0x17c)) / 0xb) +
+              (parseInt(_0x54e663(0x15b)) / 0xc) *
+                (-parseInt(_0x54e663(0x187)) / 0xd);
+            if (_0x296f46 === _0x214ef2) break;
+            else _0x2e19ec["push"](_0x2e19ec["shift"]());
+          } catch (_0x14b690) {
+            _0x2e19ec["push"](_0x2e19ec["shift"]());
+          }
+        }
+      })(_0x3ae5, 0x6cb09);
+      function normalizeSentence(_0x281fec) {
+        const _0x30fec1 = _0x2863;
+        return _0x281fec["toLowerCase"]()
+          ["replace"](/[.?!]/g, "")
+          [_0x30fec1(0x186)](/\s+/g, "\x20")
+          [_0x30fec1(0x16a)]();
+      }
+      function checkSentenceOrdering() {
+        const _0x5a1846 = _0x2863,
+          _0x33a0a2 = document["querySelectorAll"](_0x5a1846(0x172));
+        let _0x4384b1 = ![];
+        for (const _0x1bec08 of _0x33a0a2) {
+          const _0x15cdf7 = _0x1bec08[_0x5a1846(0x16c)](_0x5a1846(0x180));
+          if (!_0x15cdf7 || _0x15cdf7[_0x5a1846(0x170)]["length"] === 0x0) {
+            _0x4384b1 = !![];
+            break;
+          }
+        }
+        if (_0x4384b1) {
+          alert(_0x5a1846(0x15a));
+          return;
+        }
+        let _0x2a8dee = 0x0;
+        for (const _0x239452 of _0x33a0a2) {
+          const _0x29c00e = normalizeSentence(
+              _0x239452["getAttribute"](_0x5a1846(0x166))
+            ),
+            _0x403727 = _0x239452[_0x5a1846(0x16c)](_0x5a1846(0x180)),
+            _0x2eb1ed = Array[_0x5a1846(0x175)](_0x403727[_0x5a1846(0x170)])[
+              _0x5a1846(0x181)
+            ]((_0x2c8ba2) => _0x2c8ba2["textContent"][_0x5a1846(0x16a)]()),
+            _0x28d11c = normalizeSentence(_0x2eb1ed[_0x5a1846(0x17e)]("\x20")),
+            _0x2eb69f = _0x239452["querySelector"](".correct-sentence-hint");
+          if (_0x2eb69f) _0x2eb69f[_0x5a1846(0x174)]();
+          if (_0x28d11c === _0x29c00e)
+            _0x2a8dee++,
+              (_0x403727["style"][_0x5a1846(0x160)] = _0x5a1846(0x179)),
+              (_0x403727[_0x5a1846(0x178)][_0x5a1846(0x164)] =
+                _0x5a1846(0x17f));
+          else {
+            (_0x403727[_0x5a1846(0x178)][_0x5a1846(0x160)] = _0x5a1846(0x167)),
+              (_0x403727["style"][_0x5a1846(0x164)] =
+                "2px\x20solid\x20#dc3545");
+            const _0x1c83b0 = document["createElement"]("p");
+            (_0x1c83b0[_0x5a1846(0x173)] = _0x5a1846(0x159)),
+              (_0x1c83b0["style"][_0x5a1846(0x16e)] = _0x5a1846(0x182)),
+              (_0x1c83b0[_0x5a1846(0x178)][_0x5a1846(0x162)] =
+                _0x5a1846(0x177)),
+              (_0x1c83b0["style"]["marginTop"] = _0x5a1846(0x15d)),
+              (_0x1c83b0[_0x5a1846(0x168)] =
+                _0x5a1846(0x165) + _0x239452["getAttribute"](_0x5a1846(0x166))),
+              _0x403727[_0x5a1846(0x163)](_0x5a1846(0x15e), _0x1c83b0);
+          }
+        }
+        const _0x24f7fd = _0x33a0a2[_0x5a1846(0x169)],
+          _0x3ff6de = document[_0x5a1846(0x176)](_0x5a1846(0x15f));
+        (_0x3ff6de[_0x5a1846(0x168)] =
+          "Part\x20VI:\x20You\x20got\x20" +
+          _0x2a8dee +
+          "/" +
+          _0x24f7fd +
+          _0x5a1846(0x17a)),
+          (_0x3ff6de["style"][_0x5a1846(0x16e)] =
+            _0x2a8dee === _0x24f7fd ? _0x5a1846(0x16f) : "red"),
+          checkIfAllPartsCompleted();
+      }
+      function _0x3ae5() {
+        const _0x2f64a1 = [
+          "insertAdjacentElement",
+          "border",
+          "Đáp\x20án\x20đúng\x20là:\x20",
+          "data-answer",
+          "#f8d7da",
+          "textContent",
+          "length",
+          "trim",
+          "30Lpgldy",
+          "querySelector",
+          "263240seRDRU",
+          "color",
+          "green",
+          "children",
+          "6gcxLnN",
+          ".sentence-question",
+          "className",
+          "remove",
+          "from",
+          "getElementById",
+          "italic",
+          "style",
+          "#d4edda",
+          "\x20correct.",
+          "228221xiHvYC",
+          "539044wACCoo",
+          "80724ipZNuM",
+          "join",
+          "2px\x20solid\x20#28a745",
+          ".drop-area",
+          "map",
+          "#c0392b",
+          "1460740kKgrUg",
+          "3XbWnbz",
+          "27RRzmDx",
+          "replace",
+          "39rjKzLJ",
+          "correct-sentence-hint",
+          "⚠\x20Vui\x20lòng\x20sắp\x20xếp\x20tất\x20cả\x20câu\x20trước\x20khi\x20nộp!",
+          "2279388irQWxA",
+          "15ELjlIS",
+          "8px",
+          "afterend",
+          "result-VI",
+          "backgroundColor",
+          "1317594jIWDeo",
+          "fontStyle",
+        ];
+        _0x3ae5 = function () {
+          return _0x2f64a1;
+        };
+        return _0x3ae5();
+      }
+    </script>
+    <script>
+      function _0x490c() {
+        const _0x29091a = [
+          "You\x20scored\x20",
+          "2px\x20solid\x20#28a745",
+          "#c0392b",
+          "input[type=\x22text\x22]",
+          "color",
+          "green",
+          "75AhdJal",
+          "includes",
+          "10mvhSEB",
+          "closest",
+          ".question-block",
+          "45ePoYrh",
+          "\x22]:checked",
+          "24610QCrIKI",
+          "trim",
+          "703338xGZOoN",
+          "790632WssOvX",
+          "querySelector",
+          "getAttribute",
+          "25663aBEhhF",
+          "textContent",
+          "innerText",
+          "fontStyle",
+          "split",
+          "toLowerCase",
+          "8px",
+          "input[name=\x22q",
+          "\x20/\x20",
+          "251203FYgtQc",
+          "1665503SVFxjG",
+          "input[value=\x22",
+          "getElementById",
+          "2px\x20solid\x20#dc3545",
+          "value",
+          "length",
+          "input[name=\x22",
+          "2px\x20dashed\x20#ffc107",
+          "appendChild",
+          "#f8d7da",
+          "join",
+          "data-correct",
+          "querySelectorAll",
+          "remove",
+          "Đáp\x20án\x20đúng\x20là:\x20",
+          "#d4edda",
+          "#fff3cd",
+          "style",
+          "4330pAgTEe",
+          "border",
+          "marginTop",
+          "correct-answer-hint",
+          "slice",
+          "className",
+          ".correct-answer-hint",
+          "forEach",
+          "italic",
+          "red",
+          "62904UpDgIC",
+          "backgroundColor",
+          "⚠\x20Vui\x20lòng\x20điền\x20hết\x20tất\x20cả\x20chỗ\x20trống\x20trước\x20khi\x20nộp.",
+        ];
+        _0x490c = function () {
+          return _0x29091a;
+        };
+        return _0x490c();
+      }
+      function _0x599e(_0x554202, _0x57b8c9) {
+        const _0x490c04 = _0x490c();
+        return (
+          (_0x599e = function (_0x599eea, _0xa74f35) {
+            _0x599eea = _0x599eea - 0x184;
+            let _0x51452a = _0x490c04[_0x599eea];
+            return _0x51452a;
+          }),
+          _0x599e(_0x554202, _0x57b8c9)
+        );
+      }
+      (function (_0x1b5003, _0x36e312) {
+        const _0x403a39 = _0x599e,
+          _0x4b5141 = _0x1b5003();
+        while (!![]) {
+          try {
+            const _0x486f39 =
+              parseInt(_0x403a39(0x198)) / 0x1 +
+              (-parseInt(_0x403a39(0x189)) / 0x2) *
+                (-parseInt(_0x403a39(0x1be)) / 0x3) +
+              parseInt(_0x403a39(0x18c)) / 0x4 +
+              (parseInt(_0x403a39(0x184)) / 0x5) *
+                (parseInt(_0x403a39(0x18b)) / 0x6) +
+              parseInt(_0x403a39(0x199)) / 0x7 +
+              (-parseInt(_0x403a39(0x1b5)) / 0x8) *
+                (parseInt(_0x403a39(0x187)) / 0x9) +
+              (-parseInt(_0x403a39(0x1ab)) / 0xa) *
+                (parseInt(_0x403a39(0x18f)) / 0xb);
+            if (_0x486f39 === _0x36e312) break;
+            else _0x4b5141["push"](_0x4b5141["shift"]());
+          } catch (_0x8eb251) {
+            _0x4b5141["push"](_0x4b5141["shift"]());
+          }
+        }
+      })(_0x490c, 0x2bc9d);
+      function resetTextInputs(_0x1e6cb3, _0xda2792, _0x17b415) {
+        const _0x5bf8f3 = _0x599e;
+        for (let _0x181d01 = 0x0; _0x181d01 < _0xda2792; _0x181d01++) {
+          const _0xa904b4 = _0x1e6cb3 + _0x181d01,
+            _0x41ae62 = document[_0x5bf8f3(0x18d)](
+              _0x5bf8f3(0x196) + _0xa904b4 + "\x22]"
+            );
+          if (_0x41ae62) _0x41ae62[_0x5bf8f3(0x19d)] = "";
+        }
+        const _0x1b9b3e = document[_0x5bf8f3(0x19b)](_0x17b415);
+        if (_0x1b9b3e) _0x1b9b3e["textContent"] = "";
+      }
+      function submitAnswers(_0x3e3af0, _0x2b7ad7, _0xfb6375) {
+        const _0x267e95 = _0x599e;
+        let _0x352bd0 = 0x0;
+        for (let _0x537999 = 0x0; _0x537999 < _0x2b7ad7; _0x537999++) {
+          const _0x22fdf9 =
+              _0x3e3af0["slice"](0x0, 0x1) +
+              (parseInt(_0x3e3af0["slice"](0x1)) + _0x537999),
+            _0xf45c8f = document[_0x267e95(0x18d)](
+              _0x267e95(0x19f) + _0x22fdf9 + "\x22]:checked"
+            );
+          if (_0xf45c8f) _0x352bd0++;
+        }
+        if (_0x352bd0 < _0x2b7ad7) {
+          alert(
+            "⚠\x20Vui\x20lòng\x20trả\x20lời\x20tất\x20cả\x20các\x20câu\x20hỏi\x20trước\x20khi\x20nộp!"
+          );
+          return;
+        }
+        let _0x3797b1 = 0x0;
+        for (let _0x1e74fb = 0x0; _0x1e74fb < _0x2b7ad7; _0x1e74fb++) {
+          const _0x33141e =
+              _0x3e3af0[_0x267e95(0x1af)](0x0, 0x1) +
+              (parseInt(_0x3e3af0[_0x267e95(0x1af)](0x1)) + _0x1e74fb),
+            _0x4030d6 = document[_0x267e95(0x18d)](
+              _0x267e95(0x19f) + _0x33141e + "\x22]"
+            );
+          if (!_0x4030d6) continue;
+          const _0x5d2509 = _0x4030d6["closest"](_0x267e95(0x186)),
+            _0x275c41 = _0x5d2509[_0x267e95(0x18e)](_0x267e95(0x1a4)),
+            _0x1607a7 = _0x5d2509[_0x267e95(0x18d)](
+              _0x267e95(0x19f) + _0x33141e + _0x267e95(0x188)
+            ),
+            _0x42032d = _0x5d2509[_0x267e95(0x18d)](".correct-answer-hint");
+          if (_0x42032d) _0x42032d[_0x267e95(0x1a6)]();
+          if (_0x1607a7 && _0x1607a7[_0x267e95(0x19d)] === _0x275c41)
+            _0x3797b1++,
+              (_0x5d2509["style"][_0x267e95(0x1b6)] = _0x267e95(0x1a8)),
+              (_0x5d2509[_0x267e95(0x1aa)][_0x267e95(0x1ac)] =
+                "2px\x20solid\x20#28a745");
+          else {
+            (_0x5d2509[_0x267e95(0x1aa)][_0x267e95(0x1b6)] = _0x267e95(0x1a2)),
+              (_0x5d2509[_0x267e95(0x1aa)][_0x267e95(0x1ac)] =
+                _0x267e95(0x19c));
+            const _0x1c27b3 = _0x5d2509[_0x267e95(0x18d)](
+                _0x267e95(0x19a) + _0x275c41 + "\x22]"
+              ),
+              _0x4c131b =
+                _0x1c27b3[_0x267e95(0x185)]("label")[_0x267e95(0x191)][
+                  _0x267e95(0x18a)
+                ](),
+              _0x8c3224 = document["createElement"]("p");
+            (_0x8c3224[_0x267e95(0x1b0)] = "correct-answer-hint"),
+              (_0x8c3224[_0x267e95(0x1aa)][_0x267e95(0x1bc)] =
+                _0x267e95(0x1ba)),
+              (_0x8c3224[_0x267e95(0x1aa)]["fontStyle"] = "italic"),
+              (_0x8c3224[_0x267e95(0x1aa)][_0x267e95(0x1ad)] = "8px"),
+              (_0x8c3224["textContent"] = _0x267e95(0x1a7) + _0x4c131b),
+              _0x5d2509["appendChild"](_0x8c3224);
+          }
+        }
+        const _0x6abe6d = document[_0x267e95(0x19b)](_0xfb6375);
+        _0x6abe6d &&
+          ((_0x6abe6d[_0x267e95(0x191)] =
+            _0x267e95(0x1b8) + _0x3797b1 + "/" + _0x2b7ad7),
+          (_0x6abe6d[_0x267e95(0x1aa)][_0x267e95(0x1bc)] =
+            _0x3797b1 === _0x2b7ad7 ? _0x267e95(0x1bd) : _0x267e95(0x1b4))),
+          checkIfAllPartsCompleted();
+      }
+      function submitTextAnswers(_0x5157fc, _0x48e019) {
+        const _0x309e4a = _0x599e,
+          _0x486a80 = document[_0x309e4a(0x19b)](_0x5157fc),
+          _0x14482c = _0x486a80[_0x309e4a(0x1a5)](_0x309e4a(0x186));
+        let _0x127735 = 0x0,
+          _0xb8d82b = 0x0;
+        _0x14482c[_0x309e4a(0x1b2)]((_0x5c41ea) => {
+          const _0x434ae3 = _0x309e4a,
+            _0xd0bcee = _0x5c41ea[_0x434ae3(0x18e)](_0x434ae3(0x1a4))
+              [_0x434ae3(0x194)]()
+              [_0x434ae3(0x193)]("|")
+              ["map"]((_0x17b83b) => _0x17b83b[_0x434ae3(0x18a)]()),
+            _0x3cfef2 = _0x5c41ea[_0x434ae3(0x18d)](_0x434ae3(0x1bb)),
+            _0x34548a = _0x3cfef2["value"][_0x434ae3(0x18a)]()["toLowerCase"](),
+            _0x55069e = _0x5c41ea["querySelector"](_0x434ae3(0x1b1));
+          if (_0x55069e) _0x55069e[_0x434ae3(0x1a6)]();
+          if (_0x34548a !== "") {
+            _0xb8d82b++;
+            if (_0xd0bcee[_0x434ae3(0x1bf)](_0x34548a))
+              _0x127735++,
+                (_0x5c41ea["style"][_0x434ae3(0x1b6)] = _0x434ae3(0x1a8)),
+                (_0x5c41ea["style"][_0x434ae3(0x1ac)] = _0x434ae3(0x1b9));
+            else {
+              (_0x5c41ea[_0x434ae3(0x1aa)]["backgroundColor"] =
+                _0x434ae3(0x1a2)),
+                (_0x5c41ea["style"][_0x434ae3(0x1ac)] = _0x434ae3(0x19c));
+              const _0x3f390d = document["createElement"]("p");
+              (_0x3f390d[_0x434ae3(0x1b0)] = _0x434ae3(0x1ae)),
+                (_0x3f390d[_0x434ae3(0x1aa)][_0x434ae3(0x1bc)] =
+                  _0x434ae3(0x1ba)),
+                (_0x3f390d[_0x434ae3(0x1aa)][_0x434ae3(0x192)] =
+                  _0x434ae3(0x1b3)),
+                (_0x3f390d[_0x434ae3(0x1aa)][_0x434ae3(0x1ad)] =
+                  _0x434ae3(0x195)),
+                (_0x3f390d[_0x434ae3(0x190)] =
+                  _0x434ae3(0x1a7) +
+                  _0xd0bcee[_0x434ae3(0x1a3)](_0x434ae3(0x197))),
+                _0x5c41ea[_0x434ae3(0x1a1)](_0x3f390d);
+            }
+          } else
+            (_0x5c41ea[_0x434ae3(0x1aa)][_0x434ae3(0x1b6)] = _0x434ae3(0x1a9)),
+              (_0x5c41ea[_0x434ae3(0x1aa)][_0x434ae3(0x1ac)] =
+                _0x434ae3(0x1a0));
+        });
+        const _0x3c65c7 = _0x14482c[_0x309e4a(0x19e)],
+          _0x3b3fb5 = document["getElementById"](_0x48e019);
+        if (_0xb8d82b < _0x3c65c7) {
+          alert(_0x309e4a(0x1b7));
+          return;
+        }
+        _0x3b3fb5 &&
+          ((_0x3b3fb5[_0x309e4a(0x191)] =
+            _0x309e4a(0x1b8) + _0x127735 + "/" + _0x3c65c7),
+          (_0x3b3fb5[_0x309e4a(0x1aa)]["color"] =
+            _0x127735 === _0x3c65c7 ? "green" : "red")),
+          checkIfAllPartsCompleted();
+      }
+    </script>
+    <script>
+      (function (_0x32d29b, _0x57035f) {
+        const _0x1b7873 = _0x34ba,
+          _0x5b026e = _0x32d29b();
+        while (!![]) {
+          try {
+            const _0x2df396 =
+              parseInt(_0x1b7873(0x12e)) / 0x1 +
+              parseInt(_0x1b7873(0x13f)) / 0x2 +
+              parseInt(_0x1b7873(0x132)) / 0x3 +
+              parseInt(_0x1b7873(0x12d)) / 0x4 +
+              -parseInt(_0x1b7873(0x137)) / 0x5 +
+              -parseInt(_0x1b7873(0x138)) / 0x6 +
+              -parseInt(_0x1b7873(0x13b)) / 0x7;
+            if (_0x2df396 === _0x57035f) break;
+            else _0x5b026e["push"](_0x5b026e["shift"]());
+          } catch (_0x37d05b) {
+            _0x5b026e["push"](_0x5b026e["shift"]());
+          }
+        }
+      })(_0x31be, 0xcc055);
+      function _0x31be() {
+        const _0x72406f = [
+          "remove",
+          ".word-bank",
+          "3902647UiyJqY",
+          "querySelectorAll",
+          "forEach",
+          "#f9f9f9",
+          "274818JDDQCJ",
+          ".drop-area",
+          "2924244bVmunt",
+          "414479KdejHO",
+          "appendChild",
+          "backgroundColor",
+          "1px\x20dashed\x20#aaa",
+          "3711471QlGECp",
+          "border",
+          "style",
+          "querySelector",
+          "result-VI",
+          "3341305aXpitn",
+          "2751930QvhLph",
+        ];
+        _0x31be = function () {
+          return _0x72406f;
+        };
+        return _0x31be();
+      }
+      function _0x34ba(_0x18b198, _0x500446) {
+        const _0x31bed8 = _0x31be();
+        return (
+          (_0x34ba = function (_0x34bac8, _0x319509) {
+            _0x34bac8 = _0x34bac8 - 0x12c;
+            let _0x21bb48 = _0x31bed8[_0x34bac8];
+            return _0x21bb48;
+          }),
+          _0x34ba(_0x18b198, _0x500446)
+        );
+      }
+      function resetSentenceOrdering() {
+        const _0x41e74c = _0x34ba;
+        document[_0x41e74c(0x13c)](".sentence-question")[_0x41e74c(0x13d)](
+          (_0x1d70c9) => {
+            const _0x49fe49 = _0x41e74c,
+              _0x4d1b56 = _0x1d70c9["querySelector"](_0x49fe49(0x13a)),
+              _0x1195b2 = _0x1d70c9[_0x49fe49(0x135)](_0x49fe49(0x12c)),
+              _0x536f09 = Array["from"](_0x1195b2["children"]);
+            _0x536f09["forEach"]((_0xafcf63) =>
+              _0x4d1b56[_0x49fe49(0x12f)](_0xafcf63)
+            ),
+              (_0x1195b2[_0x49fe49(0x134)][_0x49fe49(0x130)] =
+                _0x49fe49(0x13e)),
+              (_0x1195b2[_0x49fe49(0x134)][_0x49fe49(0x133)] =
+                _0x49fe49(0x131));
+            const _0x4dc1 = _0x1d70c9[_0x49fe49(0x135)](
+              ".correct-sentence-hint"
+            );
+            if (_0x4dc1) _0x4dc1[_0x49fe49(0x139)]();
+          }
+        );
+        const _0x17245e = document["getElementById"](_0x41e74c(0x136));
+        if (_0x17245e) _0x17245e["textContent"] = "";
+      }
+    </script>
+    <script>
+      (function (_0x46e481, _0x5f3209) {
+        const _0x5a9b9b = _0x540d,
+          _0x21a0db = _0x46e481();
+        while (!![]) {
+          try {
+            const _0x4c58a9 =
+              -parseInt(_0x5a9b9b(0x1b3)) / 0x1 +
+              parseInt(_0x5a9b9b(0x188)) / 0x2 +
+              parseInt(_0x5a9b9b(0x18b)) / 0x3 +
+              (parseInt(_0x5a9b9b(0x190)) / 0x4) *
+                (parseInt(_0x5a9b9b(0x1b5)) / 0x5) +
+              (-parseInt(_0x5a9b9b(0x183)) / 0x6) *
+                (-parseInt(_0x5a9b9b(0x1b1)) / 0x7) +
+              -parseInt(_0x5a9b9b(0x18d)) / 0x8 +
+              -parseInt(_0x5a9b9b(0x19c)) / 0x9;
+            if (_0x4c58a9 === _0x5f3209) break;
+            else _0x21a0db["push"](_0x21a0db["shift"]());
+          } catch (_0x2a53c5) {
+            _0x21a0db["push"](_0x21a0db["shift"]());
+          }
+        }
+      })(_0x44bb, 0xa2875);
+      function resetPart(_0x5867ba, _0x3f1db5, _0x13bbcb) {
+        const _0x4008d1 = _0x540d;
+        for (let _0x1dab76 = 0x0; _0x1dab76 < _0x3f1db5; _0x1dab76++) {
+          const _0x26750d =
+              _0x5867ba["slice"](0x0, 0x1) +
+              (parseInt(_0x5867ba[_0x4008d1(0x1a6)](0x1)) + _0x1dab76),
+            _0x189fbf = document[_0x4008d1(0x1af)](
+              _0x4008d1(0x184) + _0x26750d + "\x22]"
+            );
+          _0x189fbf["forEach"](
+            (_0x57bf0c) => (_0x57bf0c[_0x4008d1(0x18c)] = ![])
+          );
+          const _0x27fcb8 =
+            _0x189fbf[_0x4008d1(0x18f)] > 0x0
+              ? _0x189fbf[0x0][_0x4008d1(0x195)](_0x4008d1(0x19a))
+              : null;
+          if (_0x27fcb8) {
+            (_0x27fcb8[_0x4008d1(0x19b)][_0x4008d1(0x1a0)] = "#fafafa"),
+              (_0x27fcb8[_0x4008d1(0x19b)][_0x4008d1(0x1ae)] =
+                "1px\x20solid\x20#ccc"),
+              (_0x27fcb8[_0x4008d1(0x19b)]["borderLeft"] =
+                "5px\x20solid\x20#007bff");
+            const _0x2f7355 = _0x27fcb8[_0x4008d1(0x1b6)](_0x4008d1(0x19f));
+            if (_0x2f7355) _0x2f7355[_0x4008d1(0x1b0)]();
+          }
+        }
+        const _0x5da5fc = document[_0x4008d1(0x1b4)](_0x13bbcb);
+        _0x5da5fc &&
+          ((_0x5da5fc[_0x4008d1(0x198)] = ""),
+          (_0x5da5fc[_0x4008d1(0x19b)][_0x4008d1(0x18e)] = ""));
+      }
+      function _0x540d(_0x26d353, _0x574826) {
+        const _0x44bbfc = _0x44bb();
+        return (
+          (_0x540d = function (_0x540dda, _0x4044bf) {
+            _0x540dda = _0x540dda - 0x17f;
+            let _0xcc0a88 = _0x44bbfc[_0x540dda];
+            return _0xcc0a88;
+          }),
+          _0x540d(_0x26d353, _0x574826)
+        );
+      }
+      function submitAnswers(_0x5589a5, _0x5529d6, _0x5ec2ba) {
+        const _0x5008eb = _0x540d;
+        let _0x2095fc = 0x0;
+        for (let _0x1ba3c8 = 0x0; _0x1ba3c8 < _0x5529d6; _0x1ba3c8++) {
+          const _0x7a68fd =
+              _0x5589a5[_0x5008eb(0x1a6)](0x0, 0x1) +
+              (parseInt(_0x5589a5[_0x5008eb(0x1a6)](0x1)) + _0x1ba3c8),
+            _0x4f1dde = document[_0x5008eb(0x1b6)](
+              _0x5008eb(0x184) + _0x7a68fd + _0x5008eb(0x1b7)
+            );
+          if (_0x4f1dde) _0x2095fc++;
+        }
+        if (_0x2095fc < _0x5529d6) {
+          alert(_0x5008eb(0x1a4));
+          return;
+        }
+        let _0x43a842 = 0x0;
+        for (let _0x2d1912 = 0x0; _0x2d1912 < _0x5529d6; _0x2d1912++) {
+          const _0x410830 =
+              _0x5589a5[_0x5008eb(0x1a6)](0x0, 0x1) +
+              (parseInt(_0x5589a5["slice"](0x1)) + _0x2d1912),
+            _0x3d73df = document[_0x5008eb(0x1b6)](
+              _0x5008eb(0x184) + _0x410830 + "\x22]"
+            );
+          if (!_0x3d73df) continue;
+          const _0x4f5c92 = _0x3d73df["closest"](_0x5008eb(0x19a)),
+            _0x373fec = _0x4f5c92[_0x5008eb(0x1ad)](_0x5008eb(0x199)),
+            _0x3bfb89 = _0x4f5c92["querySelector"](
+              _0x5008eb(0x184) + _0x410830 + _0x5008eb(0x1b7)
+            ),
+            _0x259739 = _0x4f5c92["querySelector"](_0x5008eb(0x19f));
+          if (_0x259739) _0x259739[_0x5008eb(0x1b0)]();
+          if (_0x3bfb89 && _0x3bfb89[_0x5008eb(0x192)] === _0x373fec)
+            _0x43a842++,
+              (_0x4f5c92[_0x5008eb(0x19b)][_0x5008eb(0x1a0)] = "#d4edda"),
+              (_0x4f5c92[_0x5008eb(0x19b)][_0x5008eb(0x1ae)] =
+                _0x5008eb(0x194));
+          else {
+            (_0x4f5c92[_0x5008eb(0x19b)]["backgroundColor"] = _0x5008eb(0x197)),
+              (_0x4f5c92["style"][_0x5008eb(0x1ae)] = _0x5008eb(0x186));
+            const _0x44381e = _0x4f5c92[_0x5008eb(0x1b6)](
+                _0x5008eb(0x1a2) + _0x373fec + "\x22]"
+              ),
+              _0x1f62da = _0x44381e["closest"](_0x5008eb(0x1b2))[
+                _0x5008eb(0x191)
+              ][_0x5008eb(0x1a1)](),
+              _0x3a14ce = document[_0x5008eb(0x1b8)]("p");
+            (_0x3a14ce[_0x5008eb(0x1ab)] = _0x5008eb(0x1ac)),
+              (_0x3a14ce[_0x5008eb(0x19b)][_0x5008eb(0x18e)] = "#c0392b"),
+              (_0x3a14ce[_0x5008eb(0x19b)][_0x5008eb(0x18a)] =
+                _0x5008eb(0x189)),
+              (_0x3a14ce["style"]["marginTop"] = _0x5008eb(0x185)),
+              (_0x3a14ce[_0x5008eb(0x198)] = _0x5008eb(0x193) + _0x1f62da),
+              _0x4f5c92[_0x5008eb(0x180)](_0x3a14ce);
+          }
+        }
+        const _0xeb75e = document[_0x5008eb(0x1b4)](_0x5ec2ba);
+        _0xeb75e &&
+          ((_0xeb75e[_0x5008eb(0x191)] =
+            "You\x20scored\x20" + _0x43a842 + "/" + _0x5529d6),
+          (_0xeb75e[_0x5008eb(0x19b)][_0x5008eb(0x18e)] =
+            _0x43a842 === _0x5529d6 ? _0x5008eb(0x196) : _0x5008eb(0x17f))),
+          checkIfAllPartsCompleted();
+      }
+      function submitTextAnswers(_0x4e9be0, _0x5b65a8, _0x18039a) {
+        const _0x1279ae = _0x540d;
+        let _0x7ae2f5 = 0x0;
+        for (let _0xf0db91 = 0x0; _0xf0db91 < _0x5b65a8; _0xf0db91++) {
+          const _0xa18278 = _0x4e9be0 + _0xf0db91,
+            _0x4c3655 = document[_0x1279ae(0x1b6)](
+              "input[name=\x22q" + _0xa18278 + "\x22]"
+            );
+          if (
+            _0x4c3655 &&
+            _0x4c3655[_0x1279ae(0x192)][_0x1279ae(0x1a1)]() !== ""
+          )
+            _0x7ae2f5++;
+        }
+        if (_0x7ae2f5 < _0x5b65a8) {
+          alert(_0x1279ae(0x1a3));
+          return;
+        }
+        let _0x113f8d = 0x0;
+        for (let _0x41c140 = 0x0; _0x41c140 < _0x5b65a8; _0x41c140++) {
+          const _0x5b9733 = _0x4e9be0 + _0x41c140,
+            _0x4fead3 = document[_0x1279ae(0x1b6)](
+              _0x1279ae(0x1a9) + _0x5b9733 + "\x22]"
+            ),
+            _0x45594f = _0x4fead3[_0x1279ae(0x195)](_0x1279ae(0x19a)),
+            _0x103264 = _0x45594f[_0x1279ae(0x1ad)]("data-correct")
+              [_0x1279ae(0x19d)]()
+              [_0x1279ae(0x1a5)]("|")
+              [_0x1279ae(0x181)]((_0x1de866) => _0x1de866[_0x1279ae(0x1a1)]()),
+            _0x47cace = _0x4fead3["value"]
+              [_0x1279ae(0x19d)]()
+              [_0x1279ae(0x1a1)](),
+            _0x5bf724 = _0x45594f[_0x1279ae(0x1b6)](_0x1279ae(0x19f));
+          if (_0x5bf724) _0x5bf724[_0x1279ae(0x1b0)]();
+          if (_0x103264["includes"](_0x47cace))
+            _0x113f8d++,
+              (_0x45594f[_0x1279ae(0x19b)][_0x1279ae(0x1a0)] =
+                _0x1279ae(0x1a7)),
+              (_0x45594f["style"][_0x1279ae(0x1ae)] = _0x1279ae(0x194));
+          else {
+            (_0x45594f[_0x1279ae(0x19b)][_0x1279ae(0x1a0)] = _0x1279ae(0x197)),
+              (_0x45594f[_0x1279ae(0x19b)]["border"] = _0x1279ae(0x186));
+            const _0x57318d = document[_0x1279ae(0x1b8)]("p");
+            (_0x57318d[_0x1279ae(0x1ab)] = "correct-answer-hint"),
+              (_0x57318d["style"]["color"] = _0x1279ae(0x19e)),
+              (_0x57318d[_0x1279ae(0x19b)][_0x1279ae(0x18a)] =
+                _0x1279ae(0x189)),
+              (_0x57318d[_0x1279ae(0x19b)][_0x1279ae(0x1a8)] =
+                _0x1279ae(0x185)),
+              (_0x57318d["textContent"] =
+                _0x1279ae(0x193) +
+                _0x103264[_0x1279ae(0x182)](_0x1279ae(0x187))),
+              _0x45594f[_0x1279ae(0x180)](_0x57318d);
+          }
+        }
+        const _0x56db74 = document["getElementById"](_0x18039a);
+        _0x56db74 &&
+          ((_0x56db74["innerText"] =
+            _0x1279ae(0x1aa) + _0x113f8d + "/" + _0x5b65a8),
+          (_0x56db74[_0x1279ae(0x19b)][_0x1279ae(0x18e)] =
+            _0x113f8d === _0x5b65a8 ? _0x1279ae(0x196) : _0x1279ae(0x17f))),
+          checkIfAllPartsCompleted();
+      }
+      function _0x44bb() {
+        const _0x67a861 = [
+          "⚠\x20Vui\x20lòng\x20trả\x20lời\x20tất\x20cả\x20các\x20câu\x20hỏi\x20trước\x20khi\x20nộp!",
+          "split",
+          "slice",
+          "#d4edda",
+          "marginTop",
+          "input[name=\x22q",
+          "You\x20scored\x20",
+          "className",
+          "correct-answer-hint",
+          "getAttribute",
+          "border",
+          "querySelectorAll",
+          "remove",
+          "623gGqnqe",
+          "label",
+          "953349UASHOo",
+          "getElementById",
+          "15JJauZA",
+          "querySelector",
+          "\x22]:checked",
+          "createElement",
+          "red",
+          "appendChild",
+          "map",
+          "join",
+          "54774LYZQtY",
+          "input[name=\x22",
+          "8px",
+          "2px\x20solid\x20#dc3545",
+          "\x20/\x20",
+          "2596382qPurNO",
+          "italic",
+          "fontStyle",
+          "313278FCKUTY",
+          "checked",
+          "3980856zcpOxd",
+          "color",
+          "length",
+          "954232PCrQpe",
+          "innerText",
+          "value",
+          "Đáp\x20án\x20đúng\x20là:\x20",
+          "2px\x20solid\x20#28a745",
+          "closest",
+          "green",
+          "#f8d7da",
+          "textContent",
+          "data-correct",
+          ".question-block",
+          "style",
+          "7326891zhmBEY",
+          "toLowerCase",
+          "#c0392b",
+          ".correct-answer-hint",
+          "backgroundColor",
+          "trim",
+          "input[value=\x22",
+          "⚠\x20Vui\x20lòng\x20điền\x20tất\x20cả\x20ô\x20trước\x20khi\x20nộp!",
+        ];
+        _0x44bb = function () {
+          return _0x67a861;
+        };
+        return _0x44bb();
+      }
+    </script>
+
+    <script>
+      const _0xddfd45 = _0x3cb0;
+      (function (_0x3123c6, _0x183ec6) {
+        const _0x4aa694 = _0x3cb0,
+          _0x44931c = _0x3123c6();
+        while (!![]) {
+          try {
+            const _0xa01a6a =
+              (-parseInt(_0x4aa694(0x12d)) / 0x1) *
+                (-parseInt(_0x4aa694(0x12e)) / 0x2) +
+              -parseInt(_0x4aa694(0x120)) / 0x3 +
+              (-parseInt(_0x4aa694(0x122)) / 0x4) *
+                (-parseInt(_0x4aa694(0x10f)) / 0x5) +
+              (parseInt(_0x4aa694(0x129)) / 0x6) *
+                (parseInt(_0x4aa694(0x124)) / 0x7) +
+              (parseInt(_0x4aa694(0x131)) / 0x8) *
+                (parseInt(_0x4aa694(0x11b)) / 0x9) +
+              (-parseInt(_0x4aa694(0x118)) / 0xa) *
+                (parseInt(_0x4aa694(0x137)) / 0xb) +
+              (-parseInt(_0x4aa694(0x12c)) / 0xc) *
+                (parseInt(_0x4aa694(0x114)) / 0xd);
+            if (_0xa01a6a === _0x183ec6) break;
+            else _0x44931c["push"](_0x44931c["shift"]());
+          } catch (_0x53321c) {
+            _0x44931c["push"](_0x44931c["shift"]());
+          }
+        }
+      })(_0x10df, 0x32d94);
+      function _0x3cb0(_0x529545, _0x55423f) {
+        const _0x10df3c = _0x10df();
+        return (
+          (_0x3cb0 = function (_0x3cb0a5, _0x545f49) {
+            _0x3cb0a5 = _0x3cb0a5 - 0x10d;
+            let _0x3d7621 = _0x10df3c[_0x3cb0a5];
+            return _0x3d7621;
+          }),
+          _0x3cb0(_0x529545, _0x55423f)
+        );
+      }
+      function shuffleQuestions(_0x280a8d, _0x4104c7 = _0xddfd45(0x112)) {
+        const _0x39338a = _0xddfd45,
+          _0x4d5e22 = document[_0x39338a(0x134)](_0x280a8d);
+        if (!_0x4d5e22) return;
+        const _0x14e858 = Array[_0x39338a(0x121)](
+          _0x4d5e22[_0x39338a(0x123)](_0x4104c7)
+        );
+        for (
+          let _0x52f8e9 = _0x14e858[_0x39338a(0x130)] - 0x1;
+          _0x52f8e9 > 0x0;
+          _0x52f8e9--
+        ) {
+          const _0xa06502 = Math[_0x39338a(0x110)](
+            Math[_0x39338a(0x12a)]() * (_0x52f8e9 + 0x1)
+          );
+          _0x4d5e22[_0x39338a(0x132)](_0x14e858[_0xa06502]);
+        }
+      }
+      function _0x10df() {
+        const _0x3b1a08 = [
+          "1GIYPQu",
+          "224866mwzOHO",
+          "em.shufflable",
+          "length",
+          "152IMOLKl",
+          "appendChild",
+          "forEach",
+          "getElementById",
+          "input[type=\x27text\x27]",
+          ".word-bank\x20span",
+          "11swcIHR",
+          "textContent",
+          "children",
+          "getAttribute",
+          "1103105dwSOeC",
+          "floor",
+          "part-IV",
+          ".question-block",
+          ".sentence-question",
+          "13SWsEVk",
+          "part-III",
+          "part-V",
+          "\x20/\x20",
+          "1025450KopVzz",
+          "off",
+          "part-II",
+          "177939HUHNYs",
+          "map",
+          "filter",
+          "split",
+          "innerHTML",
+          "306573cjVEsj",
+          "from",
+          "4MJovLV",
+          "querySelectorAll",
+          "7VRMQNG",
+          "part-VI",
+          "data-group",
+          "autocomplete",
+          "part-I",
+          "1499382TMvJuY",
+          "random",
+          "trim",
+          "6547056tUzOGy",
+        ];
+        _0x10df = function () {
+          return _0x3b1a08;
+        };
+        return _0x10df();
+      }
+      window["addEventListener"]("DOMContentLoaded", () => {
+        const _0x28e59a = _0xddfd45;
+        shuffleQuestions(_0x28e59a(0x128)),
+          shuffleOptionsInQuestions(_0x28e59a(0x128)),
+          shuffleQuestions(_0x28e59a(0x11a)),
+          shuffleOptionsInQuestions(_0x28e59a(0x11a)),
+          shuffleQuestions("part-III"),
+          shuffleOptionsInQuestions(_0x28e59a(0x115)),
+          shuffleQuestions(_0x28e59a(0x111)),
+          shuffleQuestions(_0x28e59a(0x116)),
+          shuffleQuestions(_0x28e59a(0x125), _0x28e59a(0x113)),
+          document[_0x28e59a(0x123)](".word-bank")[_0x28e59a(0x133)](
+            (_0x3cdf14) => {
+              const _0x35835e = _0x28e59a,
+                _0x291adb = Array[_0x35835e(0x121)](
+                  _0x3cdf14[_0x35835e(0x10d)]
+                );
+              for (
+                let _0x126a6b = _0x291adb[_0x35835e(0x130)] - 0x1;
+                _0x126a6b > 0x0;
+                _0x126a6b--
+              ) {
+                const _0x145123 = Math[_0x35835e(0x110)](
+                  Math[_0x35835e(0x12a)]() * (_0x126a6b + 0x1)
+                );
+                _0x3cdf14[_0x35835e(0x132)](_0x291adb[_0x145123]);
+              }
+            }
+          ),
+          document[_0x28e59a(0x123)](_0x28e59a(0x12f))[_0x28e59a(0x133)](
+            (_0x54e5e3) => {
+              const _0x3bf18d = _0x28e59a,
+                _0x47b01b = _0x54e5e3[_0x3bf18d(0x138)]
+                  [_0x3bf18d(0x11e)]("/")
+                  [_0x3bf18d(0x11c)]((_0x480b5b) =>
+                    _0x480b5b[_0x3bf18d(0x12b)]()
+                  )
+                  [_0x3bf18d(0x11d)](Boolean);
+              for (
+                let _0x204474 = _0x47b01b[_0x3bf18d(0x130)] - 0x1;
+                _0x204474 > 0x0;
+                _0x204474--
+              ) {
+                const _0x13558a = Math[_0x3bf18d(0x110)](
+                  Math[_0x3bf18d(0x12a)]() * (_0x204474 + 0x1)
+                );
+                [_0x47b01b[_0x204474], _0x47b01b[_0x13558a]] = [
+                  _0x47b01b[_0x13558a],
+                  _0x47b01b[_0x204474],
+                ];
+              }
+              _0x54e5e3[_0x3bf18d(0x11f)] = _0x47b01b["join"](_0x3bf18d(0x117));
+            }
+          ),
+          document[_0x28e59a(0x123)](_0x28e59a(0x113))[_0x28e59a(0x133)](
+            (_0x5f3e65) => {
+              const _0xab9f6d = _0x28e59a,
+                _0x4373d2 = _0x5f3e65[_0xab9f6d(0x10e)]("data-group"),
+                _0x347c1d = _0x5f3e65[_0xab9f6d(0x123)](_0xab9f6d(0x136));
+              _0x347c1d[_0xab9f6d(0x133)]((_0x233d0b) => {
+                const _0x14c81f = _0xab9f6d;
+                _0x233d0b["setAttribute"](_0x14c81f(0x126), _0x4373d2);
+              });
+            }
+          ),
+          document[_0x28e59a(0x123)](_0x28e59a(0x135))[_0x28e59a(0x133)](
+            (_0x4d04c0) => {
+              const _0x4cf890 = _0x28e59a;
+              _0x4d04c0["setAttribute"](_0x4cf890(0x127), _0x4cf890(0x119));
+            }
+          );
+      });
+    </script>
+    <script>
+      (function (_0x1495a3, _0x171539) {
+        const _0x22f09d = _0x503e,
+          _0x442958 = _0x1495a3();
+        while (!![]) {
+          try {
+            const _0x5f1327 =
+              parseInt(_0x22f09d(0x1de)) / 0x1 +
+              (parseInt(_0x22f09d(0x1cd)) / 0x2) *
+                (parseInt(_0x22f09d(0x1d9)) / 0x3) +
+              parseInt(_0x22f09d(0x1cf)) / 0x4 +
+              (parseInt(_0x22f09d(0x1d4)) / 0x5) *
+                (parseInt(_0x22f09d(0x1da)) / 0x6) +
+              (-parseInt(_0x22f09d(0x1d5)) / 0x7) *
+                (-parseInt(_0x22f09d(0x1d1)) / 0x8) +
+              (parseInt(_0x22f09d(0x1cc)) / 0x9) *
+                (-parseInt(_0x22f09d(0x1e0)) / 0xa) +
+              -parseInt(_0x22f09d(0x1cb)) / 0xb;
+            if (_0x5f1327 === _0x171539) break;
+            else _0x442958["push"](_0x442958["shift"]());
+          } catch (_0x2ccc5a) {
+            _0x442958["push"](_0x442958["shift"]());
+          }
+        }
+      })(_0xd5e7, 0x43172);
+      function _0x503e(_0x528aeb, _0x5ad14c) {
+        const _0xd5e7a5 = _0xd5e7();
+        return (
+          (_0x503e = function (_0x503e4d, _0x581c15) {
+            _0x503e4d = _0x503e4d - 0x1c9;
+            let _0x4ed603 = _0xd5e7a5[_0x503e4d];
+            return _0x4ed603;
+          }),
+          _0x503e(_0x528aeb, _0x5ad14c)
+        );
+      }
+      function _0xd5e7() {
+        const _0x4710f5 = [
+          "1192456dOfeSn",
+          "⏱\x20Bạn\x20có\x20300\x20giây\x20để\x20hoàn\x20thành\x20bài\x20thi.\x20Bạn\x20đã\x20sẵn\x20sàng\x20chưa?",
+          "4062056zogbXW",
+          "getElementById",
+          "textContent",
+          "5965vuPMJo",
+          "7ZBWDRi",
+          "⏳\x20Thời\x20gian\x20còn\x20lại:\x200.000s",
+          "💨\x20Bắt\x20đầu\x20đếm\x20ngược\x205\x20phút...\x20Chúc\x20bạn\x20may\x20mắn!",
+          "⏰\x20Hết\x20giờ!\x20Trang\x20sẽ\x20được\x20reset\x20lại.",
+          "23412HoCcmN",
+          "1176lImHsx",
+          "button[onclick=\x27startOneMinuteChallenge()\x27]",
+          "none",
+          "⏳\x20Thời\x20gian\x20còn\x20lại:\x20",
+          "105948QYElxv",
+          "querySelector",
+          "151630GzrCIR",
+          "now",
+          "toFixed",
+          "style",
+          "12941896WLLUVE",
+          "27FzzrQS",
+          "90kTlwwP",
+          "⏱\x20Bạn\x20đã\x20bắt\x20đầu\x20thử\x20thách\x20rồi!",
+        ];
+        _0xd5e7 = function () {
+          return _0x4710f5;
+        };
+        return _0xd5e7();
+      }
+      let countdownInterval,
+        isChallengeStarted = ![],
+        challengeStartTime = null;
+      function startOneMinuteChallenge() {
+        const _0x454c05 = _0x503e;
+        if (isChallengeStarted) {
+          alert(_0x454c05(0x1ce));
+          return;
+        }
+        if (confirm(_0x454c05(0x1d0))) {
+          (isChallengeStarted = !![]),
+            (challengeStartTime = Date[_0x454c05(0x1e1)]()),
+            (document[_0x454c05(0x1df)](_0x454c05(0x1db))["disabled"] = !![]),
+            alert(_0x454c05(0x1d7));
+          const _0x8ee71b = document[_0x454c05(0x1d2)]("countdown-timer"),
+            _0x481a6e = 0x12c * 0x3e8,
+            _0x287236 = Date[_0x454c05(0x1e1)]() + _0x481a6e;
+          clearInterval(countdownInterval),
+            (countdownInterval = setInterval(() => {
+              const _0x2b5965 = _0x454c05,
+                _0x4feafe = _0x287236 - Date[_0x2b5965(0x1e1)]();
+              if (_0x4feafe <= 0x0)
+                clearInterval(countdownInterval),
+                  (_0x8ee71b[_0x2b5965(0x1d3)] = _0x2b5965(0x1d6)),
+                  (_0x8ee71b[_0x2b5965(0x1ca)]["display"] = _0x2b5965(0x1dc)),
+                  alert(_0x2b5965(0x1d8)),
+                  location["reload"]();
+              else {
+                const _0x3f4946 = (_0x4feafe / 0x3e8)[_0x2b5965(0x1c9)](0x3);
+                _0x8ee71b["textContent"] = _0x2b5965(0x1dd) + _0x3f4946 + "s";
+              }
+            }, 0x21));
+        }
+      }
+    </script>
+
+    <script>
+      function _0x3039() {
+        const _0x1041f4 = [
+          "classList",
+          "🎉\x20Bạn\x20đã\x20hoàn\x20thành\x20bài\x20thi\x20sau\x20",
+          "sentence-question",
+          "1568308fjaVlG",
+          "2521552nbmzcX",
+          "1328490XiStWw",
+          "completion-message",
+          "96892LmXYdq",
+          "countdown-timer",
+          "contains",
+          ".question-block,\x20.sentence-question",
+          "map",
+          "\x20giây!",
+          "includes",
+          "forEach",
+          "length",
+          "903958MuXasb",
+          "completion-popup",
+          "children",
+          "data-correct",
+          "value",
+          "none",
+          "getElementById",
+          "querySelector",
+          "innerText",
+          "1291026sOoMZz",
+          "trim",
+          "display",
+          "10sATfBe",
+          "style",
+          "418761iLSJyr",
+          "flex",
+          "getAttribute",
+          "input[type=\x27radio\x27]:checked",
+          "toFixed",
+          "toLowerCase",
+          ".drop-area",
+        ];
+        _0x3039 = function () {
+          return _0x1041f4;
+        };
+        return _0x3039();
+      }
+      (function (_0x1d91a6, _0x29a360) {
+        const _0x4904fd = _0x28a2,
+          _0x130f2b = _0x1d91a6();
+        while (!![]) {
+          try {
+            const _0x55f5ef =
+              parseInt(_0x4904fd(0x154)) / 0x1 +
+              -parseInt(_0x4904fd(0x146)) / 0x2 +
+              parseInt(_0x4904fd(0x160)) / 0x3 +
+              (parseInt(_0x4904fd(0x162)) / 0x4) *
+                (-parseInt(_0x4904fd(0x152)) / 0x5) +
+              -parseInt(_0x4904fd(0x14f)) / 0x6 +
+              -parseInt(_0x4904fd(0x15e)) / 0x7 +
+              parseInt(_0x4904fd(0x15f)) / 0x8;
+            if (_0x55f5ef === _0x29a360) break;
+            else _0x130f2b["push"](_0x130f2b["shift"]());
+          } catch (_0xa6d614) {
+            _0x130f2b["push"](_0x130f2b["shift"]());
+          }
+        }
+      })(_0x3039, 0x39e59);
+      function _0x28a2(_0x302b3a, _0x594375) {
+        const _0x3039aa = _0x3039();
+        return (
+          (_0x28a2 = function (_0x28a299, _0x1de818) {
+            _0x28a299 = _0x28a299 - 0x140;
+            let _0x20d4a0 = _0x3039aa[_0x28a299];
+            return _0x20d4a0;
+          }),
+          _0x28a2(_0x302b3a, _0x594375)
+        );
+      }
+      function checkIfAllPartsCompleted() {
+        const _0x1a83b6 = _0x28a2,
+          _0xed280d = document["querySelectorAll"](_0x1a83b6(0x140));
+        let _0x2fdf47 = !![],
+          _0x373834 = !![];
+        _0xed280d[_0x1a83b6(0x144)]((_0x1f2c00) => {
+          const _0xcd7bd8 = _0x1a83b6;
+          if (_0x1f2c00[_0xcd7bd8(0x15b)][_0xcd7bd8(0x164)](_0xcd7bd8(0x15d))) {
+            const _0x3a34a9 = _0x1f2c00[_0xcd7bd8(0x14d)](_0xcd7bd8(0x15a)),
+              _0x48401b = normalizeSentence(
+                _0x1f2c00["getAttribute"]("data-answer")
+              ),
+              _0x510398 = normalizeSentence(
+                Array["from"](_0x3a34a9["children"])
+                  [_0xcd7bd8(0x141)]((_0x3dc384) =>
+                    _0x3dc384["textContent"]["trim"]()
+                  )
+                  ["join"]("\x20")
+              );
+            (_0x3a34a9[_0xcd7bd8(0x148)][_0xcd7bd8(0x145)] === 0x0 ||
+              _0x510398 !== _0x48401b) &&
+              ((_0x2fdf47 = ![]), (_0x373834 = ![]));
+          } else {
+            const _0x197150 = _0x1f2c00["querySelector"](
+                "input[type=\x27text\x27]"
+              ),
+              _0x528d79 = _0x1f2c00[_0xcd7bd8(0x156)](_0xcd7bd8(0x149))
+                [_0xcd7bd8(0x159)]()
+                ["split"]("|")
+                [_0xcd7bd8(0x141)]((_0x3db308) =>
+                  _0x3db308[_0xcd7bd8(0x150)]()
+                );
+            if (_0x197150) {
+              const _0x5138eb = _0x197150["value"]
+                [_0xcd7bd8(0x150)]()
+                ["toLowerCase"]();
+              (!_0x5138eb || !_0x528d79[_0xcd7bd8(0x143)](_0x5138eb)) &&
+                ((_0x2fdf47 = ![]), (_0x373834 = ![]));
+            } else {
+              const _0x16e955 = _0x1f2c00["querySelector"](_0xcd7bd8(0x157));
+              (!_0x16e955 ||
+                _0x16e955[_0xcd7bd8(0x14a)] !==
+                  _0x1f2c00[_0xcd7bd8(0x156)]("data-correct")) &&
+                ((_0x2fdf47 = ![]), (_0x373834 = ![]));
+            }
+          }
+        });
+        if (_0x2fdf47 && _0x373834) {
+          clearInterval(countdownInterval),
+            (document[_0x1a83b6(0x14c)](_0x1a83b6(0x163))[_0x1a83b6(0x153)][
+              _0x1a83b6(0x151)
+            ] = _0x1a83b6(0x14b));
+          if (challengeStartTime) {
+            const _0x18b92a = ((Date["now"]() - challengeStartTime) / 0x3e8)[
+                _0x1a83b6(0x158)
+              ](0x2),
+              _0xf71e08 = _0x1a83b6(0x15c) + _0x18b92a + _0x1a83b6(0x142),
+              _0x16570e = document[_0x1a83b6(0x14c)](_0x1a83b6(0x161));
+            if (_0x16570e) _0x16570e[_0x1a83b6(0x14e)] = _0xf71e08;
+          }
+          document[_0x1a83b6(0x14c)](_0x1a83b6(0x147))[_0x1a83b6(0x153)][
+            _0x1a83b6(0x151)
+          ] = _0x1a83b6(0x155);
+        }
+      }
+    </script>
+
+    <script>
+      function _0x22af(_0x377b54, _0x579d9b) {
+        var _0x285712 = _0x2857();
+        return (
+          (_0x22af = function (_0x22afea, _0x263f9a) {
+            _0x22afea = _0x22afea - 0x166;
+            var _0x3c74f5 = _0x285712[_0x22afea];
+            return _0x3c74f5;
+          }),
+          _0x22af(_0x377b54, _0x579d9b)
+        );
+      }
+      function _0x2857() {
+        var _0x3031b8 = [
+          "completion-popup",
+          "getElementById",
+          "18Eosjci",
+          "5lVbmPz",
+          "30896boMYSf",
+          "none",
+          "2435248jLMPSB",
+          "812109gAvuAo",
+          "342683nhRQDK",
+          "1465737PahXxN",
+          "290JLRvvV",
+          "2gnxTJl",
+          "1830060SZLFth",
+          "2130672JetVxn",
+          "style",
+        ];
+        _0x2857 = function () {
+          return _0x3031b8;
+        };
+        return _0x2857();
+      }
+      (function (_0x2ed5df, _0x1a5d2d) {
+        var _0x48a66e = _0x22af,
+          _0x49d1b9 = _0x2ed5df();
+        while (!![]) {
+          try {
+            var _0x2f44c4 =
+              (parseInt(_0x48a66e(0x169)) / 0x1) *
+                (parseInt(_0x48a66e(0x171)) / 0x2) +
+              parseInt(_0x48a66e(0x174)) / 0x3 +
+              parseInt(_0x48a66e(0x16a)) / 0x4 +
+              (parseInt(_0x48a66e(0x170)) / 0x5) *
+                (-parseInt(_0x48a66e(0x16b)) / 0x6) +
+              parseInt(_0x48a66e(0x167)) / 0x7 +
+              (parseInt(_0x48a66e(0x173)) / 0x8) *
+                (parseInt(_0x48a66e(0x16f)) / 0x9) +
+              (-parseInt(_0x48a66e(0x168)) / 0xa) *
+                (parseInt(_0x48a66e(0x166)) / 0xb);
+            if (_0x2f44c4 === _0x1a5d2d) break;
+            else _0x49d1b9["push"](_0x49d1b9["shift"]());
+          } catch (_0x19fca3) {
+            _0x49d1b9["push"](_0x49d1b9["shift"]());
+          }
+        }
+      })(_0x2857, 0x4dd30);
+      function closeCompletionPopup() {
+        var _0x3f327b = _0x22af;
+        document[_0x3f327b(0x16e)](_0x3f327b(0x16d))[_0x3f327b(0x16c)][
+          "display"
+        ] = _0x3f327b(0x172);
+      }
+    </script>
+    <script>
+      function _0x5692(_0x38bcc1, _0x219e8a) {
+        const _0x3ea104 = _0x3ea1();
+        return (
+          (_0x5692 = function (_0x569237, _0xc8094e) {
+            _0x569237 = _0x569237 - 0x101;
+            let _0x1068c6 = _0x3ea104[_0x569237];
+            return _0x1068c6;
+          }),
+          _0x5692(_0x38bcc1, _0x219e8a)
+        );
+      }
+      (function (_0x5ab8d2, _0x4a7f84) {
+        const _0x49759f = _0x5692,
+          _0x312b73 = _0x5ab8d2();
+        while (!![]) {
+          try {
+            const _0xcb9bb3 =
+              -parseInt(_0x49759f(0x112)) / 0x1 +
+              (parseInt(_0x49759f(0x107)) / 0x2) *
+                (-parseInt(_0x49759f(0x115)) / 0x3) +
+              (-parseInt(_0x49759f(0x10f)) / 0x4) *
+                (parseInt(_0x49759f(0x10b)) / 0x5) +
+              -parseInt(_0x49759f(0x117)) / 0x6 +
+              (parseInt(_0x49759f(0x118)) / 0x7) *
+                (parseInt(_0x49759f(0x10e)) / 0x8) +
+              parseInt(_0x49759f(0x119)) / 0x9 +
+              (-parseInt(_0x49759f(0x116)) / 0xa) *
+                (-parseInt(_0x49759f(0x108)) / 0xb);
+            if (_0xcb9bb3 === _0x4a7f84) break;
+            else _0x312b73["push"](_0x312b73["shift"]());
+          } catch (_0x2f5e2) {
+            _0x312b73["push"](_0x312b73["shift"]());
+          }
+        }
+      })(_0x3ea1, 0x49ee7);
+      function _0x3ea1() {
+        const _0x322326 = [
+          "setAttribute",
+          "8MWrakW",
+          "11208MSJzkU",
+          "length",
+          "floor",
+          "329843gHhyuY",
+          "data-correct",
+          "remove",
+          "12AkOvEk",
+          "10bVKDjv",
+          "3422382maWbBP",
+          "2342830XVBWto",
+          "737802ePktHi",
+          "random",
+          "cloneNode",
+          "value",
+          "forEach",
+          "appendChild",
+          "node",
+          "getElementById",
+          "isCorrect",
+          "50884tRGzMe",
+          "10016369xswGEN",
+          "input",
+          "querySelector",
+          "40Xxpdgi",
+          "querySelectorAll",
+        ];
+        _0x3ea1 = function () {
+          return _0x322326;
+        };
+        return _0x3ea1();
+      }
+      function shuffleOptionsInQuestions(_0x49e86e) {
+        const _0x249349 = _0x5692,
+          _0x47795d = document[_0x249349(0x105)](_0x49e86e);
+        if (!_0x47795d) return;
+        const _0x40af5d = _0x47795d[_0x249349(0x10c)](".question-block");
+        _0x40af5d["forEach"]((_0x39d4cf) => {
+          const _0x32dbd1 = _0x249349,
+            _0x471997 = _0x39d4cf["getAttribute"]("data-correct"),
+            _0x2d2d94 = Array["from"](_0x39d4cf[_0x32dbd1(0x10c)](".option")),
+            _0x2d7b17 = _0x2d2d94["map"]((_0x47ca81) => {
+              const _0x1a9587 = _0x32dbd1,
+                _0x599dff = _0x47ca81[_0x1a9587(0x10a)](_0x1a9587(0x109));
+              return {
+                value: _0x599dff[_0x1a9587(0x101)],
+                isCorrect: _0x599dff[_0x1a9587(0x101)] === _0x471997,
+                node: _0x47ca81[_0x1a9587(0x11b)](!![]),
+              };
+            });
+          for (
+            let _0xd2012b = _0x2d7b17[_0x32dbd1(0x110)] - 0x1;
+            _0xd2012b > 0x0;
+            _0xd2012b--
+          ) {
+            const _0x96aca8 = Math[_0x32dbd1(0x111)](
+              Math[_0x32dbd1(0x11a)]() * (_0xd2012b + 0x1)
+            );
+            [_0x2d7b17[_0xd2012b], _0x2d7b17[_0x96aca8]] = [
+              _0x2d7b17[_0x96aca8],
+              _0x2d7b17[_0xd2012b],
+            ];
+          }
+          _0x2d2d94[_0x32dbd1(0x102)]((_0x2a3902) =>
+            _0x2a3902[_0x32dbd1(0x114)]()
+          ),
+            _0x2d7b17["forEach"]((_0x2998c2) => {
+              const _0x1e88dd = _0x32dbd1;
+              _0x39d4cf[_0x1e88dd(0x103)](_0x2998c2[_0x1e88dd(0x104)]),
+                _0x2998c2[_0x1e88dd(0x106)] &&
+                  _0x39d4cf[_0x1e88dd(0x10d)](
+                    _0x1e88dd(0x113),
+                    _0x2998c2[_0x1e88dd(0x101)]
+                  );
+            });
+        });
+      }
+    </script>
+    <script>
+      var _0x249da9 = _0x1122;
+      function _0x1122(_0x10afae, _0x27e766) {
+        var _0x406214 = _0x4062();
+        return (
+          (_0x1122 = function (_0x1122e4, _0x2dbe60) {
+            _0x1122e4 = _0x1122e4 - 0x1ee;
+            var _0x142531 = _0x406214[_0x1122e4];
+            return _0x142531;
+          }),
+          _0x1122(_0x10afae, _0x27e766)
+        );
+      }
+      (function (_0x40cff2, _0x9e8fd3) {
+        var _0x769744 = _0x1122,
+          _0x146aa6 = _0x40cff2();
+        while (!![]) {
+          try {
+            var _0x3744a1 =
+              parseInt(_0x769744(0x1fc)) / 0x1 +
+              (-parseInt(_0x769744(0x1f1)) / 0x2) *
+                (parseInt(_0x769744(0x1f7)) / 0x3) +
+              (parseInt(_0x769744(0x1f2)) / 0x4) *
+                (parseInt(_0x769744(0x1fb)) / 0x5) +
+              (parseInt(_0x769744(0x1f6)) / 0x6) *
+                (-parseInt(_0x769744(0x1f4)) / 0x7) +
+              (parseInt(_0x769744(0x1fa)) / 0x8) *
+                (parseInt(_0x769744(0x1fd)) / 0x9) +
+              -parseInt(_0x769744(0x1ef)) / 0xa +
+              (parseInt(_0x769744(0x1f0)) / 0xb) *
+                (parseInt(_0x769744(0x1f5)) / 0xc);
+            if (_0x3744a1 === _0x9e8fd3) break;
+            else _0x146aa6["push"](_0x146aa6["shift"]());
+          } catch (_0x2b4158) {
+            _0x146aa6["push"](_0x146aa6["shift"]());
+          }
+        }
+      })(_0x4062, 0x5b51f),
+        document[_0x249da9(0x1ee)](_0x249da9(0x1f9), function (_0x2d349d) {
+          var _0xd4822e = _0x249da9;
+          _0x2d349d[_0xd4822e(0x1fe)](), alert("⚠️\x20Copy\x20is\x20disabled.");
+        }),
+        document[_0x249da9(0x1ee)](_0x249da9(0x1f8), function (_0x49d792) {
+          var _0x3f6140 = _0x249da9;
+          _0x49d792[_0x3f6140(0x1fe)]();
+        }),
+        document[_0x249da9(0x1ee)](_0x249da9(0x1f3), function (_0x222c4e) {
+          var _0xbd5463 = _0x249da9;
+          _0x222c4e[_0xbd5463(0x1fe)]();
+        });
+      function _0x4062() {
+        var _0x45342b = [
+          "6930zIMQKR",
+          "contextmenu",
+          "copy",
+          "8dsDiFS",
+          "5RBxLzi",
+          "488852TwhCKq",
+          "988137zmMojc",
+          "preventDefault",
+          "addEventListener",
+          "2676410eHiYqD",
+          "253qCCRXQ",
+          "310gASXUQ",
+          "2526268KIxhZn",
+          "selectstart",
+          "485324UuAyPN",
+          "96792XyOKjp",
+          "36vcncoM",
+        ];
+        _0x4062 = function () {
+          return _0x45342b;
+        };
+        return _0x4062();
+      }
+    </script>
+    <script>
+      function _0x16c8(_0x28b7cd, _0x22cb3a) {
+        const _0x279201 = _0x2792();
+        return (
+          (_0x16c8 = function (_0x16c813, _0x17b1e7) {
+            _0x16c813 = _0x16c813 - 0x122;
+            let _0x5a73c2 = _0x279201[_0x16c813];
+            return _0x5a73c2;
+          }),
+          _0x16c8(_0x28b7cd, _0x22cb3a)
+        );
+      }
+      (function (_0x5770b6, _0xe5e29b) {
+        const _0x415672 = _0x16c8,
+          _0x4fae60 = _0x5770b6();
+        while (!![]) {
+          try {
+            const _0x384267 =
+              parseInt(_0x415672(0x126)) / 0x1 +
+              (parseInt(_0x415672(0x130)) / 0x2) *
+                (-parseInt(_0x415672(0x133)) / 0x3) +
+              -parseInt(_0x415672(0x127)) / 0x4 +
+              (-parseInt(_0x415672(0x134)) / 0x5) *
+                (parseInt(_0x415672(0x12e)) / 0x6) +
+              parseInt(_0x415672(0x12b)) / 0x7 +
+              parseInt(_0x415672(0x12d)) / 0x8 +
+              parseInt(_0x415672(0x129)) / 0x9;
+            if (_0x384267 === _0xe5e29b) break;
+            else _0x4fae60["push"](_0x4fae60["shift"]());
+          } catch (_0x42525c) {
+            _0x4fae60["push"](_0x4fae60["shift"]());
+          }
+        }
+      })(_0x2792, 0xb2dc4);
+      let devtoolsOpen = false;
+      let devtoolsCheckInterval = 1000;
+      let devtoolsTimeout = null;
+
+      setInterval(() => {
+        const _0x26ac49 = _0x16c8,
+          _0x3e6836 = 0xa0,
+          _0x17bdbc =
+            window[_0x26ac49(0x128)] - window["innerWidth"] > _0x3e6836 ||
+            window[_0x26ac49(0x12f)] - window[_0x26ac49(0x132)] > _0x3e6836;
+
+        if (_0x17bdbc && !devtoolsOpen) {
+          devtoolsOpen = true;
+          document[_0x26ac49(0x125)]["innerHTML"] = "";
+
+          const _0x49b4a2 = document[_0x26ac49(0x12c)](_0x26ac49(0x123));
+          _0x49b4a2["id"] = _0x26ac49(0x122);
+          _0x49b4a2[_0x26ac49(0x124)] = _0x26ac49(0x12a);
+          document["body"]["appendChild"](_0x49b4a2);
+
+          const _0x4c12e0 = new Audio(
+            "https://www.myinstants.com/media/sounds/windows-error.mp3"
+          );
+          _0x4c12e0["play"]().catch(() => {});
+
+          checkDevCount();
+        }
+      }, devtoolsCheckInterval);
+
+      async function checkDevCount() {
+        try {
+          const fp = await FingerprintJS.load();
+          const result = await fp.get();
+          const visitorId = result.visitorId;
+          const db = firebase.firestore();
+
+          await db.collection("devtool_logs").add({
+            fingerprint: visitorId,
+            time: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+
+          const snap = await db
+            .collection("devtool_logs")
+            .where("fingerprint", "==", visitorId)
+            .get();
+
+          if (!snap.empty) {
+            const key = localStorage.getItem("validKey");
+            if (key) {
+              await db.collection("keys").doc(key).update({
+                banned: true,
+              });
+              alert("🚫 Bạn đã mở DevTools. Key đã bị khóa ngay lập tức.");
+              localStorage.removeItem("validKey");
+              location.reload();
+            }
+          }
+        } catch (err) {
+          console.error("❌ Không thể xử lý DevTools:", err);
+        }
+      }
+
+      function _0x2792() {
+        const _0x5c7f0d = [
+          "div",
+          "innerHTML",
+          "body",
+          "1396075jLlxCV",
+          "3320780FbdzqQ",
+          "outerWidth",
+          "5578614PuCLXW",
+          "\x0a\x20\x20\x20\x20\x20\x20\x20\x20🚨\x20<br/>\x20DEVTOOLS\x20DETECTED\x20<br/>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<small\x20style=\x22font-size:\x2016px;\x20color:\x20#555\x22>Vui\x20lòng\x20không\x20mở\x20dev\x20tool\x20nếu\x20cố\x20tình\x20admin\x20sẽ\x20khóa\x20key\x20bạn</small>\x0a\x20\x20\x20\x20\x20\x20",
+          "7330974kOhSXG",
+          "createElement",
+          "3054872wXXZqm",
+          "18wnlqMi",
+          "outerHeight",
+          "50sZCgWj",
+          "catch",
+          "innerHeight",
+          "117066qVzptR",
+          "1511175zsLfXF",
+          "devtools-blocker",
+        ];
+        _0x2792 = function () {
+          return _0x5c7f0d;
+        };
+        return _0x2792();
+      }
+    </script>
+    <script>
+      const _0x4584bd = _0x407f;
+      (function (_0x5d41dc, _0x4f9451) {
+        const _0x169021 = _0x407f,
+          _0x49bb72 = _0x5d41dc();
+        while (!![]) {
+          try {
+            const _0x47e019 =
+              parseInt(_0x169021(0x1e7)) / 0x1 +
+              parseInt(_0x169021(0x1e1)) / 0x2 +
+              (parseInt(_0x169021(0x1e0)) / 0x3) *
+                (parseInt(_0x169021(0x1dc)) / 0x4) +
+              parseInt(_0x169021(0x1e3)) / 0x5 +
+              (parseInt(_0x169021(0x1ee)) / 0x6) *
+                (-parseInt(_0x169021(0x1ed)) / 0x7) +
+              -parseInt(_0x169021(0x1e5)) / 0x8 +
+              (-parseInt(_0x169021(0x1e6)) / 0x9) *
+                (parseInt(_0x169021(0x1ec)) / 0xa);
+            if (_0x47e019 === _0x4f9451) break;
+            else _0x49bb72["push"](_0x49bb72["shift"]());
+          } catch (_0x21c743) {
+            _0x49bb72["push"](_0x49bb72["shift"]());
+          }
+        }
+      })(_0x1c6e, 0xd3501);
+      function _0x1c6e() {
+        const _0x5329e2 = [
+          "getElementById",
+          "4978392XuzrAg",
+          "9HsCAdl",
+          "702321tNtzjS",
+          "body",
+          "auto",
+          "none",
+          "mobile-blocker",
+          "6770810ZeaOgV",
+          "231SVmsCt",
+          "209994SRUjhg",
+          "test",
+          "flex",
+          "userAgent",
+          "4GEtDZq",
+          "overflow",
+          "hidden",
+          "pointerEvents",
+          "4305291nOfNuO",
+          "1071810LjkkPJ",
+          "style",
+          "3232805OXJYIg",
+        ];
+        _0x1c6e = function () {
+          return _0x5329e2;
+        };
+        return _0x1c6e();
+      }
+      function isMobile() {
+        const _0x17d713 = _0x407f;
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i[
+          _0x17d713(0x1ef)
+        ](navigator[_0x17d713(0x1db)]);
+      }
+      function _0x407f(_0x5813bd, _0x5dc707) {
+        const _0x1c6e92 = _0x1c6e();
+        return (
+          (_0x407f = function (_0x407f03, _0x28fe45) {
+            _0x407f03 = _0x407f03 - 0x1da;
+            let _0x3382a0 = _0x1c6e92[_0x407f03];
+            return _0x3382a0;
+          }),
+          _0x407f(_0x5813bd, _0x5dc707)
+        );
+      }
+      if (isMobile()) {
+        const blocker = document[_0x4584bd(0x1e4)](_0x4584bd(0x1eb));
+        (blocker[_0x4584bd(0x1e2)]["display"] = _0x4584bd(0x1da)),
+          (document[_0x4584bd(0x1e8)]["style"][_0x4584bd(0x1dd)] =
+            _0x4584bd(0x1de)),
+          (document[_0x4584bd(0x1e8)][_0x4584bd(0x1e2)]["pointerEvents"] =
+            _0x4584bd(0x1ea)),
+          (blocker[_0x4584bd(0x1e2)][_0x4584bd(0x1df)] = _0x4584bd(0x1e9));
+      }
+    </script>
+    <script>
+      const _0x258eab = _0x3155;
+      (function (_0x4e7ae3, _0x42152e) {
+        const _0x2312e1 = _0x3155,
+          _0x1cd73b = _0x4e7ae3();
+        while (!![]) {
+          try {
+            const _0x4a22c1 =
+              -parseInt(_0x2312e1(0x93)) / 0x1 +
+              (-parseInt(_0x2312e1(0x99)) / 0x2) *
+                (parseInt(_0x2312e1(0x9e)) / 0x3) +
+              -parseInt(_0x2312e1(0xa4)) / 0x4 +
+              (-parseInt(_0x2312e1(0x86)) / 0x5) *
+                (-parseInt(_0x2312e1(0x91)) / 0x6) +
+              parseInt(_0x2312e1(0x87)) / 0x7 +
+              (-parseInt(_0x2312e1(0xa0)) / 0x8) *
+                (-parseInt(_0x2312e1(0xa3)) / 0x9) +
+              -parseInt(_0x2312e1(0x90)) / 0xa;
+            if (_0x4a22c1 === _0x42152e) break;
+            else _0x1cd73b["push"](_0x1cd73b["shift"]());
+          } catch (_0x34df85) {
+            _0x1cd73b["push"](_0x1cd73b["shift"]());
+          }
+        }
+      })(_0x1b16, 0xa85c3);
+      function skipLoader() {
+        const _0x252227 = _0x3155,
+          _0x2d5b49 = document[_0x252227(0x98)]("page-loader");
+        (_0x2d5b49["style"]["opacity"] = "0"),
+          setTimeout(
+            () => (_0x2d5b49[_0x252227(0x96)]["display"] = _0x252227(0x92)),
+            0x1f4
+          );
+      }
+      function skipLoaderFor2Hours() {
+        const _0x245bb4 = _0x3155,
+          _0x227ace = Date[_0x245bb4(0x9d)](),
+          _0x3a0f4d = localStorage["getItem"]("skipLoaderUntil");
+        if (_0x3a0f4d && _0x227ace < parseInt(_0x3a0f4d)) {
+          showToast(
+            _0x245bb4(0x8e) +
+              new Date(parseInt(_0x3a0f4d))["toLocaleTimeString"]()
+          );
+          return;
+        }
+        localStorage[_0x245bb4(0x94)](
+          _0x245bb4(0xa2),
+          _0x227ace + 0x2 * 0x3c * 0x3c * 0x3e8
+        ),
+          skipLoader();
+      }
+      window[_0x258eab(0x88)](_0x258eab(0x8d), () => {
+        const _0x56b42a = _0x258eab,
+          _0x2309eb = localStorage[_0x56b42a(0x9a)]("skipLoaderUntil"),
+          _0x1b26a3 = Date["now"]();
+        _0x2309eb &&
+          _0x1b26a3 < parseInt(_0x2309eb) &&
+          ((document[_0x56b42a(0x98)](_0x56b42a(0x97))[_0x56b42a(0x96)][
+            _0x56b42a(0x8c)
+          ] = "none"),
+          (document[_0x56b42a(0x98)]("global-skip-btn")[_0x56b42a(0x96)][
+            _0x56b42a(0x8c)
+          ] = _0x56b42a(0x8f)));
+      }),
+        window[_0x258eab(0x88)]("load", () => {
+          const _0x4b2315 = _0x258eab,
+            _0x337c2b = localStorage[_0x4b2315(0x9a)](_0x4b2315(0xa2)),
+            _0xc56536 = Date[_0x4b2315(0x9d)]();
+          if (!_0x337c2b || _0xc56536 >= parseInt(_0x337c2b)) {
+            const _0xdbe445 = document[_0x4b2315(0x98)](_0x4b2315(0x97));
+            setTimeout(() => {
+              const _0x2489b4 = _0x4b2315;
+              (_0xdbe445[_0x2489b4(0x96)][_0x2489b4(0x8b)] = "0"),
+                setTimeout(() => {
+                  const _0x3f0b7a = _0x2489b4;
+                  (_0xdbe445[_0x3f0b7a(0x96)][_0x3f0b7a(0x8c)] =
+                    _0x3f0b7a(0x92)),
+                    (document[_0x3f0b7a(0x98)](_0x3f0b7a(0x9c))[
+                      _0x3f0b7a(0x96)
+                    ][_0x3f0b7a(0x8c)] = _0x3f0b7a(0x8f));
+                }, 0x1f4);
+            }, 0x7d0);
+          }
+        });
+      function showToast(_0x1f845a, _0x2c1b27 = 0xbb8) {
+        const _0x3436f5 = _0x258eab,
+          _0x2bc5b0 = document[_0x3436f5(0x98)](_0x3436f5(0x8a));
+        (_0x2bc5b0[_0x3436f5(0xa1)] = _0x1f845a),
+          _0x2bc5b0[_0x3436f5(0x9f)][_0x3436f5(0x95)]("show"),
+          setTimeout(() => {
+            const _0x50d956 = _0x3436f5;
+            _0x2bc5b0[_0x50d956(0x9f)][_0x50d956(0x89)](_0x50d956(0x9b));
+          }, _0x2c1b27);
+      }
+      function _0x3155(_0x57712b, _0x396f6a) {
+        const _0x1b166a = _0x1b16();
+        return (
+          (_0x3155 = function (_0x31551c, _0x356faf) {
+            _0x31551c = _0x31551c - 0x86;
+            let _0x2f1e98 = _0x1b166a[_0x31551c];
+            return _0x2f1e98;
+          }),
+          _0x3155(_0x57712b, _0x396f6a)
+        );
+      }
+      function _0x1b16() {
+        const _0x541923 = [
+          "textContent",
+          "skipLoaderUntil",
+          "9pbsvoy",
+          "1413060vogISI",
+          "1360805bSyqLv",
+          "9234771tpcZex",
+          "addEventListener",
+          "remove",
+          "notify-toast",
+          "opacity",
+          "display",
+          "DOMContentLoaded",
+          "⏱\x20Loader\x20đã\x20được\x20tắt\x20sẵn\x20tới\x20",
+          "block",
+          "13234610zuqSPr",
+          "30druTsK",
+          "none",
+          "937341hivhCQ",
+          "setItem",
+          "add",
+          "style",
+          "page-loader",
+          "getElementById",
+          "10sABwsF",
+          "getItem",
+          "show",
+          "global-skip-btn",
+          "now",
+          "33918iGsrke",
+          "classList",
+          "5441136VCYklY",
+        ];
+        _0x1b16 = function () {
+          return _0x541923;
+        };
+        return _0x1b16();
+      }
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCcnhBvMUZxjo8Ndtq1YGfnm6BtK2dQthk",
+        authDomain: "keyforid-41653.firebaseapp.com",
+        projectId: "keyforid-41653",
+        storageBucket: "keyforid-41653.appspot.com",
+        messagingSenderId: "410297104288",
+        appId: "1:410297104288:web:a56c2f22ee6818e0bad6c5",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      async function getFingerprint() {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        return result.visitorId;
+      }
+
+      async function logKeyUsage(key, fingerprint) {
+        const timestamp = Date.now();
+        const userAgent = navigator.userAgent;
+        let ip = "unknown";
+
+        try {
+          const res = await fetch("https://api.ipify.org?format=json");
+          const data = await res.json();
+          ip = data.ip;
+        } catch (e) {
+          console.warn("⚠️ Không thể lấy IP:", e);
+        }
+
+        const logId = `${key}_${timestamp}`;
+        await db.collection("logs").doc(logId).set({
+          key: key,
+          fingerprint: fingerprint,
+          userAgent: userAgent,
+          ip: ip,
+          usedAt: timestamp,
+          status: "key_used",
+        });
+
+        console.log("📌 Đã ghi log:", logId);
+      }
+
+      function startCountdown(expireTime) {
+        const countdownEl = document.getElementById("countdown");
+        countdownEl.style.display = "block";
+
+        function update() {
+          const now = Date.now();
+          const remaining = expireTime - now;
+
+          if (remaining <= 0) {
+            countdownEl.textContent = "⏰ Hết hạn!";
+            localStorage.removeItem("validKey");
+            alert("⏰ Key đã hết hạn. Vui lòng nhập lại key.");
+            location.reload();
+            return;
+          }
+
+          const h = Math.floor(remaining / (1000 * 60 * 60));
+          const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((remaining % (1000 * 60)) / 1000);
+
+          countdownEl.textContent = `⏳ Còn lại: ${h}h ${m}m ${s}s`;
+        }
+
+        update();
+        setInterval(update, 1000);
+      }
+
+      async function checkKey() {
+        const key = document.getElementById("keyInput").value.trim();
+        const resultBox = document.getElementById("result");
+
+        if (!key) {
+          resultBox.innerText = "⚠️ Vui lòng nhập key.";
+          return;
+        }
+
+        try {
+          const doc = await db.collection("keys").doc(key).get();
+          if (!doc.exists) {
+            resultBox.innerText = "❌ Key không tồn tại!";
+            return;
+          }
+
+          const data = doc.data();
+          const now = Date.now();
+          const createdAt = data.createdAt || 0;
+          const duration = data.duration || 2 * 60 * 60 * 1000;
+          const fingerprint = await getFingerprint();
+
+          if (data.banned === true) {
+            resultBox.innerText = "🚫 Key đã bị khóa.";
+            return;
+          }
+
+          if (now - createdAt > duration) {
+            resultBox.innerText = "⏰ Key đã hết hạn!";
+            return;
+          }
+
+          if (data.fingerprint && data.fingerprint !== fingerprint) {
+            resultBox.innerText = "❌ Key đã được dùng trên thiết bị khác!";
+            return;
+          }
+
+          if (!data.fingerprint) {
+            await db.collection("keys").doc(key).update({ fingerprint });
+          }
+
+          await logKeyUsage(key, fingerprint);
+          document.getElementById("overlayKey").style.display = "none";
+          document.body.style.overflow = "auto";
+          localStorage.setItem("validKey", key);
+          startCountdown(createdAt + duration);
+        } catch (err) {
+          console.error("❌ Lỗi checkKey:", err);
+          resultBox.innerText = "❌ Có lỗi xảy ra!";
+        }
+      }
+
+      window.onload = async () => {
+        document.body.style.overflow = "hidden";
+        const savedKey = localStorage.getItem("validKey");
+
+        if (savedKey) {
+          try {
+            const doc = await db.collection("keys").doc(savedKey).get();
+            if (doc.exists) {
+              const data = doc.data();
+              const now = Date.now();
+              const createdAt = data.createdAt || 0;
+              const duration = data.duration || 2 * 60 * 60 * 1000;
+              const fingerprint = await getFingerprint();
+
+              if (
+                now - createdAt <= duration &&
+                data.fingerprint === fingerprint &&
+                data.banned !== true
+              ) {
+                document.getElementById("overlayKey").style.display = "none";
+                document.body.style.overflow = "auto";
+                startCountdown(createdAt + duration);
+                return;
+              }
+            }
+            localStorage.removeItem("validKey");
+          } catch (err) {
+            console.error("❌ Lỗi kiểm tra key:", err);
+            localStorage.removeItem("validKey");
+          }
+        }
+      };
+    </script>
+  </body>
+</html>
