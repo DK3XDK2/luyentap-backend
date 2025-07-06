@@ -19,6 +19,9 @@ app.use(
     saveUninitialized: true,
   })
 );
+app.get("/", (req, res) => {
+  res.render("index"); // index.ejs
+});
 
 // Middleware kiểm tra key
 const checkKey = (req, res, next) => {
