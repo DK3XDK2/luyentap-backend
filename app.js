@@ -84,12 +84,10 @@ app.post("/api/session", async (req, res) => {
     }
 
     if (data.fingerprint && data.fingerprint !== fingerprint) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "❌ Key đã dùng trên thiết bị khác!",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "❌ Key đã dùng trên thiết bị khác!",
+      });
     }
 
     if (!data.fingerprint) {
@@ -111,7 +109,10 @@ app.get("/test-firebase", async (req, res) => {
     const docs = snapshot.docs.map((doc) => doc.data());
     res.json(docs);
   } catch (err) {
-    res.status(500).json({ error: "Không kết nối được Firebase" });
+    console.error("🔥 Firebase error:", err); // 👈 Ghi log chi tiết
+    res
+      .status(500)
+      .json({ error: "Không kết nối được Firebase", detail: err.message });
   }
 });
 
