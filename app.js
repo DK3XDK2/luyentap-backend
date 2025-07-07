@@ -1,4 +1,9 @@
 require("dotenv").config();
+console.log("🔍 ENV CHECK:", {
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  email: process.env.FIREBASE_CLIENT_EMAIL,
+  privateKeyStart: process.env.FIREBASE_PRIVATE_KEY?.slice(0, 30),
+});
 
 const express = require("express");
 const session = require("express-session");
