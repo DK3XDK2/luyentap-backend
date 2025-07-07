@@ -1,7 +1,5 @@
 const admin = require("firebase-admin");
-
-require("dotenv").config();
-const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+const serviceAccount = require("./serviceAccount.json"); // ← dùng trực tiếp file JSON
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
