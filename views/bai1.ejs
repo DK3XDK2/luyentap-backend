@@ -4,8 +4,6 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
     <title>English Practice Test – Bài 1</title>
     <style>
@@ -72,7 +70,6 @@
         margin-top: 12px;
       }
       #page-loader {
-        display: none;
         position: fixed;
         inset: 0;
         background: radial-gradient(circle at center, #000 20%, #0a0a1a 100%);
@@ -85,7 +82,9 @@
         font-family: sans-serif;
         font-size: 18px;
         overflow: hidden;
+        opacity: 1;
         transition: opacity 0.5s ease;
+        transform: translateZ(0);
       }
 
       .solar-system {
@@ -588,9 +587,11 @@
   </head>
 
   <body>
+    <!-- Đồng hồ -->
     <div
       id="countdown"
       style="
+        display: none;
         position: fixed;
         top: 10px;
         left: 10px;
@@ -601,13 +602,22 @@
         border-radius: 20px;
         font-family: 'Arial', sans-serif;
         z-index: 999;
-        display: none;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
       "
     >
       ⏳
     </div>
+    <div id="page-loader">
+      <div class="solar-system">
+        <div class="sun"></div>
+        <div class="orbit orbit1"><div class="planet planet1"></div></div>
+        <div class="orbit orbit2"><div class="planet planet2"></div></div>
+        <div class="orbit orbit3"><div class="planet planet3"></div></div>
+      </div>
+      <p class="loader-text">Đang khởi động vũ trụ...</p>
+    </div>
 
+    <!-- Overlay nhập key -->
     <div
       id="overlayKey"
       style="
@@ -633,18 +643,6 @@
       ></div>
     </div>
 
-    <div id="notify-toast" class="toast">Thông báo</div>
-
-    <div id="page-loader" style="display: none">
-      <div class="solar-system">
-        <div class="sun"></div>
-        <div class="orbit orbit1"><div class="planet planet1"></div></div>
-        <div class="orbit orbit2"><div class="planet planet2"></div></div>
-        <div class="orbit orbit3"><div class="planet planet3"></div></div>
-      </div>
-      <p class="loader-text">Đang khởi động vũ trụ...</p>
-    </div>
-
     <button
       id="global-skip-btn"
       onclick="skipLoaderFor2Hours()"
@@ -653,12 +651,15 @@
       ⏭ Bỏ qua loading trong 2h
     </button>
 
+    <!-- Mobile chặn -->
     <div id="mobile-blocker">
       <div class="mobile-message">
-        ⚠ Trang này không hỗ trợ trên điện thoại.<br />
-        Vui lòng sử dụng máy tính để truy cập.
+        ⚠ Trang này không hỗ trợ trên điện thoại.<br />Vui lòng sử dụng máy tính
+        để truy cập.
       </div>
     </div>
+
+    <!-- Các popup -->
     <div id="completion-popup" style="display: none">
       <div class="popup-content">
         <h2 id="completion-message">🎉 Bạn đã hoàn thành bài thi!</h2>
@@ -691,14 +692,11 @@
         </div>
         <p>
           <b style="color: teal"
-            >Đây là web tạo ra với việc phục vụ cho luyện tập bài ktra và có thể
-            đáp án chưa đầy đủ, còn nhiều lỗi và ko hđộng trên đth.</b
+            >Đây là web luyện tập, có thể có lỗi và không hỗ trợ điện thoại.</b
           >
         </p>
         <p>
-          <b style="color: teal"
-            >Mong mọi người thông cảm! Nếu cần hỗ trợ, vui lòng liên hệ:</b
-          >
+          <b style="color: teal">Cần hỗ trợ:</b>
           <b style="color: #c0392b">https://www.facebook.com/vu.q.huy.795955</b>
         </p>
         <button
@@ -716,18 +714,8 @@
         </button>
       </div>
     </div>
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyCcnhBvMUZxjo8Ndtq1YGfnm6BtK2dQthk",
-        authDomain: "keyforid-41653.firebaseapp.com",
-        projectId: "keyforid-41653",
-        storageBucket: "keyforid-41653.appspot.com",
-        messagingSenderId: "410297104288",
-        appId: "1:410297104288:web:a56c2f22ee6818e0bad6c5",
-      };
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
 
+    <script>
       async function getFingerprint() {
         const fp = await FingerprintJS.load();
         const result = await fp.get();
@@ -737,75 +725,43 @@
       async function checkKey() {
         const key = document.getElementById("keyInput").value.trim();
         const resultBox = document.getElementById("result");
-
-        if (!key) {
-          resultBox.innerText = "⚠️ Vui lòng nhập key.";
-          return;
-        }
+        if (!key) return (resultBox.innerText = "⚠️ Vui lòng nhập key.");
 
         try {
-          const doc = await db.collection("keys").doc(key).get();
-          if (!doc.exists) {
-            resultBox.innerText = "❌ Key không tồn tại!";
-            return;
-          }
-
-          const data = doc.data();
-          const now = Date.now();
-          const createdAt = data.createdAt || 0;
-          const duration = data.duration || 2 * 60 * 60 * 1000;
           const fingerprint = await getFingerprint();
 
-          if (data.banned === true) {
-            resultBox.innerText = "🚫 Key đã bị khóa.";
-            return;
-          }
-
-          if (now - createdAt > duration) {
-            resultBox.innerText = "⏰ Key đã hết hạn!";
-            return;
-          }
-
-          if (data.fingerprint && data.fingerprint !== fingerprint) {
-            resultBox.innerText = "❌ Key đã được dùng trên thiết bị khác!";
-            return;
-          }
-
-          if (!data.fingerprint) {
-            await db.collection("keys").doc(key).update({ fingerprint });
-          }
-
-          await fetch("/api/session", {
+          const res = await fetch("/api/session", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ key }),
+            body: JSON.stringify({ key, fingerprint }),
           });
 
+          if (!res.ok) {
+            const msg = await res.text();
+            resultBox.innerText = msg;
+            return;
+          }
+
+          // ✅ Hợp lệ: load bài học
           localStorage.setItem("validKey", key);
           document.getElementById("overlayKey").style.display = "none";
           document.body.style.overflow = "auto";
 
-          // 👇 Hiển thị trái đất loader
           const loader = document.getElementById("page-loader");
-          if (loader) loader.style.display = "block";
+          if (loader) {
+            loader.style.display = "flex";
+            loader.style.opacity = "1";
+            window.loaderStartTime = Date.now();
+          }
 
-          // Sau đó mới load bài học
           const script = document.createElement("script");
           script.src = "/lessons/lesson1.js";
           document.body.appendChild(script);
         } catch (err) {
-          console.error("❌ Lỗi checkKey:", err);
-          resultBox.innerText = "❌ Có lỗi xảy ra!";
+          console.error("❌ Lỗi:", err);
+          resultBox.innerText = "❌ Lỗi xảy ra!";
         }
       }
-
-      window.onload = () => {
-        document.body.style.overflow = "hidden";
-        const savedKey = localStorage.getItem("validKey");
-        if (savedKey) {
-          checkKey(savedKey);
-        }
-      };
     </script>
   </body>
 </html>

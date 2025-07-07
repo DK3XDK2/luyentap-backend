@@ -1127,7 +1127,36 @@ const lessonContent = `
     `;
 document.body.insertAdjacentHTML("beforeend", lessonContent);
 
-// Sau khi hiển thị nội dung → tải script xử lý
+window.lessonLoaded = function () {
+  const loader = document.getElementById("page-loader");
+
+  if (loader) {
+    // Hiển thị ít nhất 2s
+    const startTime = window.loaderStartTime || Date.now();
+    const elapsed = Date.now() - startTime;
+    const delay = Math.max(0, 2000 - elapsed); // đảm bảo đủ 2s
+
+    setTimeout(() => {
+      loader.style.opacity = "0";
+
+      setTimeout(() => {
+        loader.style.display = "none";
+      }, 500); // đợi hiệu ứng transition
+    }, delay);
+  }
+
+  // Hiện nút skip nếu chưa bị ẩn
+  const skipBtn = document.getElementById("global-skip-btn");
+  if (skipBtn && !localStorage.getItem("skipLoader")) {
+    skipBtn.style.display = "block";
+  }
+};
+
+// Ghi lại thời điểm loader bắt đầu hiển thị
+window.loaderStartTime = Date.now();
+if (window.lessonLoaded) window.lessonLoaded();
+
+// Tải script xử lý
 const script = document.createElement("script");
 script.src = "/lessons/lesson1-script.js";
 document.body.appendChild(script);

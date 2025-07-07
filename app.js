@@ -1,31 +1,40 @@
-require("dotenv").config(); // ⬅️ Bắt buộc nếu bạn dùng biến môi trường
+require("dotenv").config(); // Nếu dùng biến môi trường sau này
 
 const express = require("express");
 const session = require("express-session");
-const admin = require("./firebase");
-
+const admin = require("firebase-admin");
+const path = require("path");
 const app = express();
+
+// Khởi tạo Firebase Admin SDK từ file serviceAccount
+const serviceAccount = require("./serviceAccount.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 const db = admin.firestore();
+
 const PORT = process.env.PORT || 8080;
 
-// Thiết lập EJS
+// Cấu hình EJS
 app.set("view engine", "ejs");
-app.set("views", "./views");
+app.set("views", path.join(__dirname, "views"));
 
-// Middleware
+// Middleware xử lý
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(
   session({
-    secret: "luyentap-secret", // Có thể chuyển sang biến môi trường
+    secret: "luyentap-secret", // Có thể chuyển sang biến môi trường nếu muốn
     resave: false,
     saveUninitialized: true,
   })
 );
 
-// Trang chính
+// ------------------ ROUTES ------------------ //
+
+// Trang chủ
 app.get("/", (req, res) => {
   res.render("index");
 });
@@ -36,30 +45,67 @@ app.get("/bai:so", (req, res) => {
   res.render(`bai${so}`);
 });
 
-// ✅ API xác thực key từ Firebase
+// ✅ API xác thực key và fingerprint
 app.post("/api/session", async (req, res) => {
-  const { key } = req.body;
+  const { key, fingerprint } = req.body;
 
   try {
-    const doc = await db.collection("keys").doc(key).get();
-    const data = doc.data();
+    if (!key || !fingerprint) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Thiếu thông tin key hoặc fingerprint.",
+        });
+    }
 
-    if (!doc.exists || data.banned === true) {
-      return res.status(403).json({
-        success: false,
-        message: "❌ Key không tồn tại hoặc đã bị khóa.",
-      });
+    const doc = await db.collection("keys").doc(key).get();
+
+    if (!doc.exists) {
+      return res
+        .status(404)
+        .json({ success: false, message: "❌ Key không tồn tại!" });
+    }
+
+    const data = doc.data();
+    const now = Date.now();
+    const createdAt = data.createdAt || 0;
+    const duration = data.duration || 2 * 60 * 60 * 1000;
+
+    if (data.banned) {
+      return res
+        .status(403)
+        .json({ success: false, message: "🚫 Key đã bị khóa!" });
+    }
+
+    if (now - createdAt > duration) {
+      return res
+        .status(403)
+        .json({ success: false, message: "⏰ Key đã hết hạn!" });
+    }
+
+    if (data.fingerprint && data.fingerprint !== fingerprint) {
+      return res
+        .status(403)
+        .json({
+          success: false,
+          message: "❌ Key đã được dùng trên thiết bị khác!",
+        });
+    }
+
+    if (!data.fingerprint) {
+      await db.collection("keys").doc(key).update({ fingerprint });
     }
 
     req.session.validKey = true;
-    return res.json({ success: true });
+    return res.json({ success: true, message: "✅ Key hợp lệ!" });
   } catch (err) {
     console.error("🔥 Lỗi xác thực session:", err);
-    return res.status(500).json({ success: false, message: "Lỗi server." });
+    return res.status(500).json({ success: false, message: "❌ Lỗi server." });
   }
 });
 
-// 🔧 Kiểm tra Firebase kết nối (tùy chọn)
+// Test kết nối Firebase
 app.get("/test-firebase", async (req, res) => {
   try {
     const snapshot = await db.collection("keys").limit(1).get();
