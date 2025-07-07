@@ -1,32 +1,35 @@
-require("dotenv").config(); // Nếu dùng biến môi trường sau này
+require("dotenv").config();
 
 const express = require("express");
 const session = require("express-session");
 const admin = require("firebase-admin");
 const path = require("path");
-const app = express();
 
-// Khởi tạo Firebase Admin SDK từ file serviceAccount
-const serviceAccount = require("./serviceAccount.json");
+const app = express();
+const PORT = process.env.PORT || 8080;
+
+// 🔐 Khởi tạo Firebase Admin từ biến môi trường
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  }),
 });
 const db = admin.firestore();
 
-const PORT = process.env.PORT || 8080;
-
-// Cấu hình EJS
+// 🛠 Cấu hình view
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Middleware xử lý
+// 🧩 Middleware xử lý
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(
   session({
-    secret: "luyentap-secret", // Có thể chuyển sang biến môi trường nếu muốn
+    secret: "luyentap-secret", // Có thể cho vào biến môi trường nếu muốn
     resave: false,
     saveUninitialized: true,
   })
@@ -34,12 +37,12 @@ app.use(
 
 // ------------------ ROUTES ------------------ //
 
-// Trang chủ
+// 🏠 Trang chủ
 app.get("/", (req, res) => {
   res.render("index");
 });
 
-// Trang bài học theo số
+// 📚 Trang bài học
 app.get("/bai:so", (req, res) => {
   const so = req.params.so;
   res.render(`bai${so}`);
@@ -53,14 +56,10 @@ app.post("/api/session", async (req, res) => {
     if (!key || !fingerprint) {
       return res
         .status(400)
-        .json({
-          success: false,
-          message: "Thiếu thông tin key hoặc fingerprint.",
-        });
+        .json({ success: false, message: "Thiếu key hoặc fingerprint." });
     }
 
     const doc = await db.collection("keys").doc(key).get();
-
     if (!doc.exists) {
       return res
         .status(404)
@@ -89,7 +88,7 @@ app.post("/api/session", async (req, res) => {
         .status(403)
         .json({
           success: false,
-          message: "❌ Key đã được dùng trên thiết bị khác!",
+          message: "❌ Key đã dùng trên thiết bị khác!",
         });
     }
 
@@ -105,7 +104,7 @@ app.post("/api/session", async (req, res) => {
   }
 });
 
-// Test kết nối Firebase
+// 🔧 Kiểm tra Firebase
 app.get("/test-firebase", async (req, res) => {
   try {
     const snapshot = await db.collection("keys").limit(1).get();
@@ -116,7 +115,7 @@ app.get("/test-firebase", async (req, res) => {
   }
 });
 
-// Khởi động server
+// 🚀 Khởi động server
 app.listen(PORT, () => {
   console.log(`🚀 Server chạy tại http://localhost:${PORT}`);
 });
